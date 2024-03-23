@@ -23,11 +23,11 @@ export default {
         align: "start",
         key: "sn",
       },
-      { title: "Date (DD/MM/YY)", key: "date" },
-      { title: "Time", key: "time" },
-      { title: "Patient", key: "email" },
-      { title: "Teleconsult", key: "teleconsult" },
-      { title: "Actions", key: "actions", sortable: false },
+      { title: "Date (DD/MM/YY)", key: "date", align: "center" },
+      { title: "Time", key: "time", align: "center" },
+      { title: "Patient", key: "email", align: "center" },
+      { title: "Teleconsult", key: "teleconsult", align: "center" },
+      { title: "Actions", key: "actions", sortable: false, align: "center" },
     ],
     data: [],
   }),
@@ -39,13 +39,6 @@ export default {
   methods: {
     initialize() {
       this.data = [
-        {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-        },
         {
           sn: 1,
           date: "13/05/24",
