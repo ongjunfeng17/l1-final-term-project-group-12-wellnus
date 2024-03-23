@@ -7,13 +7,23 @@ const userRole = ref("student");
 
 <template>
   <div>
+    Upcoming Appointments
     <v-container v-if="userRole === 'student'">
       <PatientAppointmentTable />
     </v-container>
 
-    <v-container v-else-if="userRole === 'doctor'"
-      ><DoctorAppointmentTable
-    /></v-container>
+    <v-container v-else-if="userRole === 'doctor'">
+      <DoctorAppointmentTable />
+    </v-container>
+
+    Past Appointments
+    <v-container v-if="userRole === 'student'">
+      <PatientAppointmentTable />
+    </v-container>
+
+    <v-container v-else-if="userRole === 'doctor'">
+      <DoctorAppointmentTable />
+    </v-container>
   </div>
 </template>
 
