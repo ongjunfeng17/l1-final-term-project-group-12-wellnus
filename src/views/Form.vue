@@ -17,7 +17,7 @@ export default {
   },
 
   setup() {
-    const userRole = ref("student");
+    const userRole = ref("doctor");
     return { userRole }; // make `userRole` accessible in the template
   },
 
