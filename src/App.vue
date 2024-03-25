@@ -1,15 +1,14 @@
-<template>
-  <div id="nav">
-    <router-link to="/"> Home </router-link> |
-    <router-link to="table"> Table </router-link>
-  </div>
-  <router-view />
-</template>
 <script>
+console.log("in App")
+
 export default {
-  name: "App",
+  name: 'App',
 };
 </script>
+
+<template>
+  <router-view/>
+</template>
 
 <style>
 #app {
@@ -19,15 +18,5 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 30px;
-}
-#nav {
-  padding: 30px;
-}
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-#nav a.router-link-exact-active {
-  color: #42b983;
 }
 </style>
