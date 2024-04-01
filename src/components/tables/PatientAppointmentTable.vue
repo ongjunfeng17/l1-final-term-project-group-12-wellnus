@@ -16,6 +16,7 @@
 import firebaseApp from "../../firebase.js";
 import { getDocs, getFirestore } from "firebase/firestore";
 import { collection, doc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 const db = getFirestore(firebaseApp);
 
 export default {
@@ -29,13 +30,7 @@ export default {
       { title: "Teleconsult", key: "teleconsult", align: "center" },
       { title: "Actions", key: "actions", sortable: false, align: "center" }
     ],
-    data: [{
-          sn: 1,
-          date: "13/05/24",
-          time: "17:30",
-          teleconsult: "NIL",
-          MC: "NIL",
-        }],
+    data: [],
   }),
 
   created() {
@@ -44,23 +39,27 @@ export default {
 
   methods: {
     async initialize() {
-      const querySnapshot = await getDocs(collection(db, "davidyeong555@gmail.com"));
+      const auth = getAuth()
+      const userEmail = auth.currentUser["email"];
+      const querySnapshot = await getDocs(collection(db, userEmail));
+      let counter = 1;
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
+        const docData = doc.data();
+        const docObj = {
+          sn: counter,
+          date: docData["Date"],
+          time: docData["Time"],
+          teleconsult: docData["Teleconsult"],
+          MC: "NIL"
+        }
+        this.data.push(docObj);
+        counter++;
       });
-      this.data = [
-        {
-          sn: 1,
-          date: "13/05/24",
-          time: "17:30",
-          teleconsult: "NIL",
-          MC: "NIL",
-        
-        },
-      ];
     },
     deleteItem(item) {},
   },
+
+  props: ["user"]
 };
 </script>
