@@ -13,20 +13,22 @@
 </template>
 
 <script>
+import firebaseApp from "../../firebase.js";
+import { getDocs, getFirestore } from "firebase/firestore";
+import { collection, doc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+const db = getFirestore(firebaseApp);
+
 export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
     headers: [
-      {
-        title: "S/N",
-        align: "center",
-        key: "sn",
-      },
+      { title: "S/N", key: "sn",  align: "center" },
       { title: "Date (DD/MM/YY)", key: "date", align: "center" },
       { title: "Time", key: "time", align: "center" },
       { title: "Teleconsult", key: "teleconsult", align: "center" },
-      { title: "Actions", key: "actions", sortable: false, align: "center" },
+      { title: "Actions", key: "actions", sortable: false, align: "center" }
     ],
     data: [],
   }),
@@ -36,16 +38,24 @@ export default {
   },
 
   methods: {
-    initialize() {
-      this.data = [
-        {
-          sn: 1,
-          date: "13/05/24",
-          time: "17:30",
-          teleconsult: "NIL",
-          MC: "NIL",
-        },
-      ];
+    async initialize() {
+      const auth = getAuth()
+      const userEmail = auth.currentUser["email"];
+      const querySnapshot = await getDocs(collection(db, userEmail));
+      let counter = 1;
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        const docData = doc.data();
+        const docObj = {
+          sn: counter,
+          date: docData["Date"],
+          time: docData["Time"],
+          teleconsult: docData["Teleconsult"],
+          MC: "NIL"
+        }
+        this.data.push(docObj);
+        counter++;
+      });
     },
     deleteItem(item) {},
   },
