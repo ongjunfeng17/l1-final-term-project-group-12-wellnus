@@ -59,7 +59,5 @@ export default {
     },
     deleteItem(item) {},
   },
-
-  props: ["user"]
 };
 </script>
