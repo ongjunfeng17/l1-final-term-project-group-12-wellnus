@@ -1,13 +1,19 @@
 <script>
-console.log("in App")
+import NavBar from "@/components/NavBar.vue";
 
 export default {
-  name: 'App',
+  name: "App",
+  components: {
+    NavBar,
+  },
 };
 </script>
 
 <template>
-  <router-view/>
+  <v-app>
+    <NavBar />
+    <router-view />
+  </v-app>
 </template>
 
 <style>

@@ -1,16 +1,14 @@
 <script>
-import NavBar from "@/components/NavBar.vue";
 import LogOut from "@/components/LogOut.vue";
-import {getAuth, onAuthStateChanged} from "firebase/auth"
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import PatientAppointmentTable from "@/components/tables/PatientAppointmentTable.vue";
 import DoctorAppointmentTable from "@/components/tables/DoctorAppointmentTable.vue";
 import { ref } from "vue";
 
 export default {
-  name: 'Table',
+  name: "Table",
   components: {
-    NavBar,
     LogOut,
     PatientAppointmentTable,
     DoctorAppointmentTable,
@@ -25,12 +23,12 @@ export default {
     return {
       refreshComp: 0,
       user: null,
-    }
+    };
   },
   methods: {
     change() {
-      this.refreshComp += 1
-    }
+      this.refreshComp += 1;
+    },
   },
 
   mounted() {
@@ -46,7 +44,6 @@ export default {
 
 <template>
   <div v-if="user">
-    <NavBar />
     Upcoming Appointments
     <v-container v-if="userRole === 'student'">
       <PatientAppointmentTable />
