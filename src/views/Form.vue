@@ -1,7 +1,6 @@
 <script>
 import AddBookingStudent from "@/components/AddBookingStudent.vue";
 import AddBookingDoctor from "@/components/AddBookingDoctor.vue";
-import LogOut from "@/components/LogOut.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { ref } from "vue";
@@ -9,7 +8,6 @@ import { ref } from "vue";
 export default {
   name: "Form",
   components: {
-    LogOut,
     AddBookingStudent,
     AddBookingDoctor,
   },
@@ -51,8 +49,6 @@ export default {
     <v-container v-else-if="userRole === 'doctor'">
       <AddBookingDoctor />
     </v-container>
-
-    <LogOut />
   </div>
 </template>
 

@@ -1,10 +1,12 @@
 <script>
 import NavBar from "@/components/NavBar.vue";
+import LogOut from "@/components/LogOut.vue";
 
 export default {
   name: "App",
   components: {
     NavBar,
+    LogOut,
   },
 };
 </script>
@@ -14,6 +16,7 @@ export default {
     <v-container fluid class="pa-0">
       <NavBar />
       <v-container><router-view /></v-container>
+      <LogOut />
     </v-container>
   </v-app>
 </template>

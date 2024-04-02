@@ -1,5 +1,4 @@
 <script>
-import LogOut from "@/components/LogOut.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import PatientAppointmentTable from "@/components/tables/PatientAppointmentTable.vue";
@@ -9,7 +8,6 @@ import { ref } from "vue";
 export default {
   name: "Table",
   components: {
-    LogOut,
     PatientAppointmentTable,
     DoctorAppointmentTable,
   },
@@ -61,8 +59,6 @@ export default {
     <v-container v-else-if="userRole === 'doctor'">
       <DoctorAppointmentTable />
     </v-container>
-
-    <LogOut />
   </div>
 </template>
 
