@@ -39,9 +39,10 @@ export default {
 
   methods: {
     async initialize() {
-      const auth = getAuth()
+      const auth = getAuth();
       const userEmail = auth.currentUser["email"];
       const querySnapshot = await getDocs(collection(db, userEmail));
+      const timeNow = Date.now();
       let counter = 1;
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
@@ -50,14 +51,19 @@ export default {
           sn: counter,
           date: docData["Date"],
           time: docData["Time"],
-          teleconsult: docData["Teleconsult"],
-          MC: "NIL"
+          teleconsult: docData["Teleconsult"]
         }
-        this.data.push(docObj);
-        counter++;
+        const docTimeString = `${docObj.date}T${docObj.time}`;
+        const docTime = new Date(docTimeString).valueOf();
+        if (docTime >= timeNow) {
+          this.data.push(docObj);
+          counter++;
+        }
       });
     },
-    deleteItem(item) {},
+    deleteItem(item) { 
+      /* TODO */ 
+    },
   },
 };
 </script>
