@@ -1,17 +1,13 @@
 <script>
 import AddBookingStudent from "@/components/AddBookingStudent.vue";
 import AddBookingDoctor from "@/components/AddBookingDoctor.vue";
-import NavBar from "@/components/NavBar.vue";
-import LogOut from "@/components/LogOut.vue";
-import {getAuth, onAuthStateChanged} from "firebase/auth"
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { ref } from "vue";
 
 export default {
-  name: 'Form',
+  name: "Form",
   components: {
-    NavBar,
-    LogOut,
     AddBookingStudent,
     AddBookingDoctor,
   },
@@ -25,12 +21,12 @@ export default {
     return {
       refreshComp: 0,
       user: null,
-    }
+    };
   },
   methods: {
     change() {
-      this.refreshComp += 1
-    }
+      this.refreshComp += 1;
+    },
   },
 
   mounted() {
@@ -46,7 +42,6 @@ export default {
 
 <template>
   <div v-if="user">
-    <NavBar />
     <v-container v-if="userRole === 'student'">
       <AddBookingStudent />
     </v-container>
@@ -54,8 +49,6 @@ export default {
     <v-container v-else-if="userRole === 'doctor'">
       <AddBookingDoctor />
     </v-container>
-
-    <LogOut />
   </div>
 </template>
 

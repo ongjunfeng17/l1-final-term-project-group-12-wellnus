@@ -1,13 +1,24 @@
 <script>
-console.log("in App")
+import NavBar from "@/components/NavBar.vue";
+import LogOut from "@/components/LogOut.vue";
 
 export default {
-  name: 'App',
+  name: "App",
+  components: {
+    NavBar,
+    LogOut,
+  },
 };
 </script>
 
 <template>
-  <router-view/>
+  <v-app>
+    <v-container fluid class="pa-0">
+      <NavBar />
+      <v-container><router-view /></v-container>
+      <LogOut />
+    </v-container>
+  </v-app>
 </template>
 
 <style>
@@ -17,6 +28,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 30px;
 }
 </style>
