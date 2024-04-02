@@ -11,8 +11,10 @@ export default {
 
 <template>
   <v-app>
-    <NavBar />
-    <router-view />
+    <v-container fluid class="pa-0">
+      <NavBar />
+      <v-container><router-view /></v-container>
+    </v-container>
   </v-app>
 </template>
 

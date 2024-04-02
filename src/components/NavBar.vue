@@ -25,7 +25,7 @@ export default {
 
 <template>
   <div id="logged" v-if="user">
-    <div class="sticky top-0 z-10 w-full shadow-xl mb-8">
+    <div class="sticky top-0 z-10 w-full shadow-xl">
       <v-container .align-center .justify-center fluid class="p-8">
         <v-row align-center justify-center fluid>
           <v-row cols="2" dense
