@@ -3,6 +3,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import PatientAppointmentTable from "@/components/tables/PatientAppointmentTable.vue";
 import DoctorAppointmentTable from "@/components/tables/DoctorAppointmentTable.vue";
+import PatientPastApptTable from "@/components/tables/PatientPastApptTable.vue";
 import { ref } from "vue";
 
 export default {
@@ -10,6 +11,7 @@ export default {
   components: {
     PatientAppointmentTable,
     DoctorAppointmentTable,
+    PatientPastApptTable
   },
 
   setup() {
@@ -53,7 +55,7 @@ export default {
 
     Past Appointments
     <v-container v-if="userRole === 'student'">
-      <PatientAppointmentTable />
+      <PatientPastApptTable />
     </v-container>
 
     <v-container v-else-if="userRole === 'doctor'">

@@ -4,11 +4,6 @@
     :items="data"
     :sort-by="[{ key: 'date', order: 'asc' }]"
   >
-    <template v-slot:item.actions="{ item }">
-      <v-icon size="small" @click="deleteItem(item)" color="black">
-        $delete
-      </v-icon>
-    </template>
   </v-data-table>
 </template>
 
@@ -28,7 +23,7 @@ export default {
       { title: "Date (DD/MM/YY)", key: "date", align: "center" },
       { title: "Time", key: "time", align: "center" },
       { title: "Teleconsult", key: "teleconsult", align: "center" },
-      { title: "Actions", key: "actions", sortable: false, align: "center" }
+      { title: "Medical Certificate", key: "mc", sortable: false, align: "center" }
     ],
     data: [],
   }),
@@ -51,18 +46,16 @@ export default {
           sn: counter,
           date: docData["Date"],
           time: docData["Time"],
-          teleconsult: docData["Teleconsult"]
+          teleconsult: docData["Teleconsult"],
+          mc: "NIL"
         }
         const docTimeString = `${docObj.date}T${docObj.time}`;
         const docTime = new Date(docTimeString).valueOf();
-        if (docTime >= timeNow) {
+        if (docTime < timeNow) {
           this.data.push(docObj);
           counter++;
         }
       });
-    },
-    deleteItem(item) { 
-      /* TODO */ 
     },
   },
 };
