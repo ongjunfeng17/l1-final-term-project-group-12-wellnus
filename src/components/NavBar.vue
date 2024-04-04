@@ -60,9 +60,11 @@ export default {
           <v-col cols="2">
             <v-menu open-on-hover>
               <template v-slot:activator="{ props }">
-                <v-btn v-bind="props">
-                  <UserAvatar :user="user" :userPhoto="user?.photoURL" />
-                </v-btn>
+                <UserAvatar
+                  :user="user"
+                  :userPhoto="user?.photoURL"
+                  v-bind="props"
+                />
               </template>
               <v-list>
                 <v-list-item v-for="(item, index) in items" :key="index">
