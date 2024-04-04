@@ -6,6 +6,7 @@ import UserAvatar from "@/components/UserAvatar.vue";
 export default {
   name: "NavBar",
   components: { UserAvatar },
+  items: [{ title: "Profile", title: "Log Out" }],
 
   data() {
     return {
@@ -57,7 +58,18 @@ export default {
             </v-row>
           </v-col>
           <v-col cols="2">
-            <UserAvatar :user="user" :userPhoto="user?.photoURL" />
+            <v-menu open-on-hover>
+              <template v-slot:activator="{ props }">
+                <v-btn v-bind="props">
+                  <UserAvatar :user="user" :userPhoto="user?.photoURL" />
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item v-for="(item, index) in items" :key="index">
+                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </v-col>
         </v-row>
       </v-container>
