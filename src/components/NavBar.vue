@@ -1,8 +1,11 @@
 <script>
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
+import UserAvatar from "@/components/UserAvatar.vue";
+
 export default {
   name: "NavBar",
+  components: { UserAvatar },
 
   data() {
     return {
@@ -17,6 +20,7 @@ export default {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         this.user = user;
+        this.userPhoto = user?.photoURL;
       }
     });
   },
@@ -52,16 +56,9 @@ export default {
               <v-col> <router-link to="form"> Form </router-link></v-col>
             </v-row>
           </v-col>
-          <v-col cols="2"
-            ><v-avatar
-              ><v-img
-                v-if="user?.photoURL"
-                :src="user.photoURL"
-                referrerpolicy="no-referrer"
-              ></v-img
-              ><v-icon v-else>$account</v-icon></v-avatar
-            ></v-col
-          >
+          <v-col cols="2">
+            <UserAvatar :user="user" :userPhoto="user?.photoURL" />
+          </v-col>
         </v-row>
       </v-container>
     </div>
