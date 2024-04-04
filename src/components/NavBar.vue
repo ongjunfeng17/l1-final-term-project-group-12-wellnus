@@ -2,17 +2,18 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import UserAvatar from "@/components/UserAvatar.vue";
+import LogOut from "@/components/LogOut.vue";
 
 export default {
   name: "NavBar",
-  components: { UserAvatar },
+  components: { UserAvatar, LogOut },
 
   data() {
     return {
       user: false,
       nusLogo: "/assets/logos/NUS-logo.png",
       uhcLogo: "/assets/logos/UHC-logo.png",
-      items: [{ title: "Profile" }, { title: "Log Out" }],
+      items: [{ title: "Profile" }, { title: "LogOut" }],
     };
   },
 
@@ -67,9 +68,7 @@ export default {
                 />
               </template>
               <v-list>
-                <v-list-item v-for="(item, index) in items" :key="index">
-                  <v-list-item-title>{{ item.title }}</v-list-item-title>
-                </v-list-item>
+                <v-list-item><LogOut /></v-list-item>
               </v-list>
             </v-menu>
           </v-col>
