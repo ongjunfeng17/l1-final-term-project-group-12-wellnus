@@ -28,6 +28,8 @@
       @input="v$.contact.$touch"
     ></v-text-field>
 
+    <div>idealistically, table for emails goes here</div>
+
     <v-btn class="me-4" @click="v$.$validate"> submit </v-btn>
     <!-- this button should trigger form submission and
     ideally send a confirmation message on success  -->
