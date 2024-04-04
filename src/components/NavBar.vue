@@ -6,13 +6,13 @@ import UserAvatar from "@/components/UserAvatar.vue";
 export default {
   name: "NavBar",
   components: { UserAvatar },
-  items: [{ title: "Profile", title: "Log Out" }],
 
   data() {
     return {
       user: false,
       nusLogo: "/assets/logos/NUS-logo.png",
       uhcLogo: "/assets/logos/UHC-logo.png",
+      items: [{ title: "Profile" }, { title: "Log Out" }],
     };
   },
 
