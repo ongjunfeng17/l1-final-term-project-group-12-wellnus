@@ -1,14 +1,19 @@
 <script>
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
+import UserAvatar from "@/components/UserAvatar.vue";
+import LogOut from "@/components/LogOut.vue";
+
 export default {
   name: "NavBar",
+  components: { UserAvatar, LogOut },
 
   data() {
     return {
       user: false,
       nusLogo: "/assets/logos/NUS-logo.png",
       uhcLogo: "/assets/logos/UHC-logo.png",
+      items: [{ title: "Profile" }, { title: "LogOut" }],
     };
   },
 
@@ -17,6 +22,7 @@ export default {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         this.user = user;
+        this.userPhoto = user?.photoURL;
       }
     });
   },
@@ -52,16 +58,20 @@ export default {
               <v-col> <router-link to="form"> Form </router-link></v-col>
             </v-row>
           </v-col>
-          <v-col cols="2"
-            ><v-avatar
-              ><v-img
-                v-if="user?.photoURL"
-                :src="user.photoURL"
-                referrerpolicy="no-referrer"
-              ></v-img
-              ><v-icon v-else>$account</v-icon></v-avatar
-            ></v-col
-          >
+          <v-col cols="2">
+            <v-menu open-on-hover>
+              <template v-slot:activator="{ props }">
+                <UserAvatar
+                  :user="user"
+                  :userPhoto="user?.photoURL"
+                  v-bind="props"
+                />
+              </template>
+              <v-list>
+                <v-list-item><LogOut /></v-list-item>
+              </v-list>
+            </v-menu>
+          </v-col>
         </v-row>
       </v-container>
     </div>
