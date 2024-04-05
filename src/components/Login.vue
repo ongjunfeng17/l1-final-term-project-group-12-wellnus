@@ -13,21 +13,22 @@
                                         <h6 class="text-center grey--text">
                                             WellNUS is an app to book and track your appointments at UHC. <br>
                                             Simply book an appointment and enjoy less waiting time. <br>
-                                            Book teleconsult with your doctors at the comfort of your home.
+                                            Book teleconsults with your doctors at the comfort of your home.
                                         </h6>
                                         <v-row align="center" justify="center">
                                             <v-col cols="12" sm="8">
-                                                <v-text-field label="Email" outlined dense color="blue"
+                                                <v-text-field v-model="email" label="Email" outlined dense color="blue"
                                                     autocomplete="false" class="mt-16" />
-                                                <v-text-field label="Password" outlined dense color="blue"
-                                                    autocomplete="false" type="password" />
+                                                <v-text-field v-model="password" label="Password" outlined dense
+                                                    color="blue" autocomplete="false" type="password" />
                                                 <v-row>
                                                     <v-col cols="12" sm="7">
                                                         <v-checkbox label="Remember Me" class="mt-n1" color="blue">
                                                         </v-checkbox>
                                                     </v-col>
                                                     <v-col cols="12" sm="5">
-                                                        <span class="caption blue--text">Forgot password</span>
+                                                        <span class="caption blue--text" @click="resetPassword"
+                                                            style="cursor: pointer;">Forgot password?</span>
                                                     </v-col>
                                                 </v-row>
                                                 <v-btn color="blue" dark block tile @click="signIn">Log in</v-btn>
@@ -252,6 +253,7 @@ export default {
             this.email = this.email.trim();
             if (!this.isValidEmail(this.email)) {
                 console.error("Invalid email format.");
+                alert("Invalid email format.");
                 return;
             }
 
@@ -261,7 +263,32 @@ export default {
                 this.$router.push('/appointments');
             } catch (error) {
                 console.error("Error signing in:", error.message);
-                // Handle sign-in errors...
+                // Check if the error code is for a wrong password
+                if (error.code === "auth/invalid-credential") {
+                    alert("The password you entered is incorrect. Please try again.");
+                } else {
+                    // For other types of errors, you might want to handle them differently or show a generic error message
+                    alert(`Error signing in: ${error.message}`);
+                }
+            }
+        },
+
+
+        async resetPassword() {
+            this.email = this.email.trim();
+            console.log(this.email)
+            if (!this.isValidEmail(this.email)) {
+                console.error("Invalid email format.");
+                alert("Invalid email format. Please enter a valid email address to reset your password.");
+                return;
+            }
+
+            try {
+                await firebase.auth().sendPasswordResetEmail(this.email);
+                alert("Password reset email sent. Please check your inbox.");
+            } catch (error) {
+                console.error("Error sending password reset email:", error.message);
+                alert(`Error sending password reset email: ${error.message}`);
             }
         },
 
