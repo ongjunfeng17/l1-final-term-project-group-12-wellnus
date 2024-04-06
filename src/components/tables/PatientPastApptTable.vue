@@ -29,8 +29,7 @@ export default {
 
   props: {
     user: {
-      type: Object,
-      default: "No data provided"
+      type: Object
     }
   },
 
