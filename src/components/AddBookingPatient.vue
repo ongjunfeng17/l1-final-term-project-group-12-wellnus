@@ -89,7 +89,8 @@ export default {
             let date = document.getElementById("date").value;
             let time = document.getElementById("time").value;
             let teleconsult = document.getElementById("teleconsult").value;
-
+            const timestamp = new Date(`${date}T${time}`).valueOf();
+            
             alert("Booking appointment...");
 
             try {
@@ -100,6 +101,7 @@ export default {
                     date: date,
                     time: time,
                     teleconsult: teleconsult,
+                    timestamp: timestamp
                 });
                 console.log(docRef);
                 document.getElementById('myform').reset();

@@ -54,7 +54,7 @@ export default {
   <div v-if="user">
     Upcoming Appointments
     <v-container v-if="userRole === 'patient'">
-      <PatientAppointmentTable />
+      <PatientAppointmentTable :user='user'/>
     </v-container>
 
     <v-container v-else-if="userRole === 'doctor'">
@@ -63,7 +63,7 @@ export default {
 
     Past Appointments
     <v-container v-if="userRole === 'patient'">
-      <PatientPastApptTable />
+      <PatientPastApptTable :user='user'/>
     </v-container>
 
     <v-container v-else-if="userRole === 'doctor'">
