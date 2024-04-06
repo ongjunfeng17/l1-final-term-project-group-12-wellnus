@@ -23,8 +23,12 @@
                                                     color="blue" autocomplete="false" type="password" />
                                                 <v-row>
                                                     <v-col cols="12" sm="7">
-                                                        <v-checkbox label="Remember Me" class="mt-n1" color="blue">
-                                                        </v-checkbox>
+                                                        <div class="d-flex align-center">
+                                                            <input type="checkbox" id="rememberMeCheckbox" v-model="rememberMe" @change="printRememberMeState(rememberMe)" class="mr-2">
+                                                            <label for="rememberMeCheckbox" class="blue--text">Remember Me</label>
+                                                        </div>
+                                                        <!-- <v-checkbox label="Remember Me" v-model="rememberMe" class="mt-n1" color="blue">
+                                                        </v-checkbox> -->
                                                     </v-col>
                                                     <v-col cols="12" sm="5">
                                                         <span class="caption blue--text" @click="resetPassword"
@@ -177,10 +181,23 @@ export default {
         firstName: '',
         lastName: '',
         isDoctor: false,
+        rememberMe: false,
     }),
     props: {
         source: String,
     },
+    created() {
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                // User is signed in, redirect them to the home page
+                this.$router.push('/appointments');
+                console.log("past user")
+            } else {
+                
+            }
+        });
+    },
+    
 
     methods: {
         // googleSignIn() {
@@ -256,8 +273,10 @@ export default {
                 alert("Invalid email format.");
                 return;
             }
+            const persistenceType = this.rememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION;
 
             try {
+                await firebase.auth().setPersistence(persistenceType);
                 const userCredential = await firebase.auth().signInWithEmailAndPassword(this.email, this.password);
                 // Redirect to '/appointments' or handle the login success scenario
                 this.$router.push('/appointments');
