@@ -32,6 +32,12 @@ export default {
     data: [],
   }),
 
+  props: {
+    user: {
+      type: Object
+    }
+  },
+
   created() {
     this.initialize();
   },

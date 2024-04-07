@@ -15,7 +15,7 @@
 <script>
 import firebaseApp from "../../firebase.js";
 import { getDocs, getFirestore, deleteDoc } from "firebase/firestore";
-import { collection, doc } from "firebase/firestore";
+import { collection, query, where } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 const db = getFirestore(firebaseApp);
 
@@ -33,32 +33,37 @@ export default {
     data: [],
   }),
 
+  props: {
+    user: {
+      type: Object
+    }
+  },
+
   created() {
     this.initialize();
   },
 
   methods: {
     async initialize() {
-      const auth = getAuth();
-      const userEmail = auth.currentUser["email"];
-      const querySnapshot = await getDocs(collection(db, userEmail));
-      const timeNow = Date.now();
+      const uid = this.user.uid;
+      const q = query(collection(db, "appointments"), 
+          where("patientId", "==", uid),
+          where("timestamp", ">=", Date.now()));
+      const querySnapshot = await getDocs(q);
+      
       let counter = 1;
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
         const docData = doc.data();
         const docObj = {
           sn: counter,
-          date: docData["Date"],
-          time: docData["Time"],
-          teleconsult: docData["Teleconsult"]
+          date: docData["date"],
+          time: docData["time"],
+          teleconsult: docData["teleconsult"],
+          mc: "NIL"
         }
-        const docTimeString = `${docObj.date}T${docObj.time}`;
-        const docTime = new Date(docTimeString).valueOf();
-        if (docTime >= timeNow) {
-          this.data.push(docObj);
-          counter++;
-        }
+        this.data.push(docObj);
+        counter++;
       });
     },
     async deleteItem(date) { 

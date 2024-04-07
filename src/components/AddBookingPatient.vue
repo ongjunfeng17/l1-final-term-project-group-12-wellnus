@@ -1,7 +1,7 @@
 <script>
 import firebaseApp from '../firebase.js';
 import { getFirestore } from 'firebase/firestore';
-import { doc, setDoc } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const db = getFirestore(firebaseApp)
@@ -89,19 +89,23 @@ export default {
             let date = document.getElementById("date").value;
             let time = document.getElementById("time").value;
             let teleconsult = document.getElementById("teleconsult").value;
-
+            const timestamp = new Date(`${date}T${time}`).valueOf();
+            
             alert("Booking appointment...");
 
             try {
-                console.log(String(this.user.email))
-                const docRef = await setDoc(doc(db, String(this.user.email), date), {
-                    Date: date,
-                    Time: time,
-                    Teleconsult: teleconsult,
-                })
-                console.log(docRef)
+                console.log(String(this.user.email));
+                console.log(this.user.uid);
+                const docRef = await addDoc(collection(db, "appointments"), {
+                    patientId: this.user.uid,
+                    date: date,
+                    time: time,
+                    teleconsult: teleconsult,
+                    timestamp: timestamp
+                });
+                console.log(docRef);
                 document.getElementById('myform').reset();
-                this.$emit("added")
+                this.$emit("added");
             }
             catch (error) {
                 console.error("Error adding document: ", error);
