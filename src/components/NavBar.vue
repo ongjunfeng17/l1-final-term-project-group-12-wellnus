@@ -67,9 +67,14 @@ export default {
                   v-bind="props"
                 />
               </template>
+              
               <v-list>
+                <v-list-item>
+                  <router-link to="profile"> Profile Information </router-link>
+                </v-list-item>
                 <v-list-item><LogOut /></v-list-item>
               </v-list>
+              
             </v-menu>
           </v-col>
         </v-row>
