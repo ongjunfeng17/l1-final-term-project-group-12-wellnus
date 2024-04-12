@@ -19,11 +19,9 @@ export default {
     computed: {
         timeOptions() {
             const options = [];
-            // Convert the selectedDate to a Date object and get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
             const dayOfWeek = new Date(this.selectedDate).getDay();
             let timeRanges = [];
 
-            // Define time ranges for each day
             if ([1, 2, 3].includes(dayOfWeek)) { // Monday, Tuesday, Wednesday
                 timeRanges = [
                     { start: '08:30', end: '11:30' },
@@ -41,7 +39,9 @@ export default {
                 ];
             }
 
-            // Generate time options based on the defined time ranges
+            const now = new Date();
+            const currentDate = now.toISOString().split('T')[0];
+
             timeRanges.forEach(range => {
                 const [startHour, startMinute] = range.start.split(':').map(Number);
                 const [endHour, endMinute] = range.end.split(':').map(Number);
@@ -49,11 +49,16 @@ export default {
                 let currentMinute = startMinute;
 
                 while (currentHour < endHour || (currentHour === endHour && currentMinute <= endMinute)) {
-                    // Format time as "HH:MM"
                     const time = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
-                    options.push(time);
 
-                    // Increment time by 30 minutes
+                    // Only add time if it's at least one hour after the current time when selectedDate is today
+                    if (this.selectedDate !== currentDate || new Date(`${this.selectedDate}T${time}:00`).getTime() > now.getTime() + 3600000) {
+                        options.push(time);
+                    }
+
+                    console.log(currentHour)
+                    console.log(currentMinute)
+
                     currentMinute += 30;
                     if (currentMinute >= 60) {
                         currentHour += 1;
@@ -90,7 +95,7 @@ export default {
             let time = document.getElementById("time").value;
             let teleconsult = document.getElementById("teleconsult").value;
             const timestamp = new Date(`${date}T${time}`).valueOf();
-            
+
             alert("Booking appointment...");
 
             try {
@@ -111,7 +116,7 @@ export default {
                 console.error("Error adding document: ", error);
             }
         },
-        
+
     }
 };
 </script>
@@ -119,11 +124,11 @@ export default {
 <template>
     <div class="container">
         <form id="myform">
-            <v-card title = "Book and Appointment"> </v-card>
+            <v-card title="Book and Appointment"> </v-card>
             <!-- <h2>Book an Appointment</h2> -->
             <br /><br />
 
-            
+
             <div class="formli">
                 <label for="date">Appointment Date: </label>
                 <input type="date" id="date" v-model="selectedDate" :min="minDate" required=""
