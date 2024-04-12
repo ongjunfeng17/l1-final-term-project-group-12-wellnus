@@ -1,10 +1,10 @@
 <script>
 import firebaseApp from '../firebase.js';
 import { getFirestore } from 'firebase/firestore';
-import { doc, setDoc } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-const db = getFirestore(firebaseApp)
+const db = getFirestore(firebaseApp);
 
 export default {
     data() {
@@ -13,17 +13,15 @@ export default {
             user: null,
             selectedDate: new Date().toISOString().split('T')[0], // Initialize with today's date
             selectedTime: '',
+            reasonForVisit: '', // Store the reason for the visit
         };
     },
-
     computed: {
         timeOptions() {
             const options = [];
-            // Convert the selectedDate to a Date object and get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
             const dayOfWeek = new Date(this.selectedDate).getDay();
             let timeRanges = [];
 
-            // Define time ranges for each day
             if ([1, 2, 3].includes(dayOfWeek)) { // Monday, Tuesday, Wednesday
                 timeRanges = [
                     { start: '08:30', end: '11:30' },
@@ -41,7 +39,9 @@ export default {
                 ];
             }
 
-            // Generate time options based on the defined time ranges
+            const now = new Date();
+            const currentDate = now.toISOString().split('T')[0];
+
             timeRanges.forEach(range => {
                 const [startHour, startMinute] = range.start.split(':').map(Number);
                 const [endHour, endMinute] = range.end.split(':').map(Number);
@@ -49,11 +49,15 @@ export default {
                 let currentMinute = startMinute;
 
                 while (currentHour < endHour || (currentHour === endHour && currentMinute <= endMinute)) {
-                    // Format time as "HH:MM"
                     const time = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
-                    options.push(time);
 
-                    // Increment time by 30 minutes
+                    // Only add time if it's at least one hour after the current time when selectedDate is today
+                    if (this.selectedDate !== currentDate || new Date(`${this.selectedDate}T${time}:00`).getTime() > now.getTime() + 3600000) {
+                        options.push(time);
+                    }
+
+                    console.log(currentHour)
+
                     currentMinute += 30;
                     if (currentMinute >= 60) {
                         currentHour += 1;
@@ -72,7 +76,6 @@ export default {
             this.selectedDate = newDate;
         }
     },
-
     mounted() {
         const auth = getAuth();
         onAuthStateChanged(auth, (user) => {
@@ -81,52 +84,51 @@ export default {
             }
         });
     },
-
     methods: {
         async savetofs() {
-            console.log("IN AC")
-
             let date = document.getElementById("date").value;
             let time = document.getElementById("time").value;
-            let patient = document.getElementById("patient").value;
             let teleconsult = document.getElementById("teleconsult").value;
+            let reason = document.getElementById("reason").value; // Get the reason from the form
+            const timestamp = new Date(`${date}T${time}`).valueOf();
 
             alert("Booking appointment...");
 
             try {
-                console.log(String(this.user.email))
-                const docRef = await setDoc(doc(db, String(this.user.email), date), {
-                    Date: date,
-                    Time: time,
-                    Patient: patient,
-                    Teleconsult: teleconsult,
-                })
-                console.log(docRef)
+                console.log(this.user.email);
+                console.log(this.user.uid);
+                const docRef = await addDoc(collection(db, "appointments"), {
+                    patientId: this.user.uid,
+                    date: date,
+                    time: time, 
+                    patient: patient,
+                    teleconsult: teleconsult,
+                    reasonForVisit: reason, // Save the reason in Firebase
+                    timestamp: timestamp
+                });
+                console.log(docRef.id);
                 document.getElementById('myform').reset();
-                this.$emit("added")
-            }
-            catch (error) {
+                this.$emit("added");
+            } catch (error) {
                 console.error("Error adding document: ", error);
             }
         },
-
     }
 };
 </script>
 
+
 <template>
     <div class="container">
         <form id="myform">
-            <h2>Book an Appointment</h2>
+            <v-card title="Book an Appointment"></v-card>
             <br /><br />
-
             <div class="formli">
-                <label for="date">Appointment Date: </label>
-                <input type="date" id="date" v-model="selectedDate" :min="minDate" required=""
-                    placeholder="Enter Date" />
+                <label for="date">Appointment Date:</label>
+                <input type="date" id="date" v-model="selectedDate" :min="minDate" required placeholder="Enter Date" />
                 <br /><br />
 
-                <label for="time">Appointment Time: </label>
+                <label for="time">Appointment Time:</label>
                 <select id="time" required v-model="selectedTime">
                     <option value="" disabled selected>Select your option</option>
                     <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
@@ -138,12 +140,17 @@ export default {
                     placeholder="Enter patient's email" />
                 <br /><br />
 
-                <label for="teleconsult">Teleconsult: </label>
+
+                <label for="teleconsult">Teleconsult:</label>
                 <select id="teleconsult" required>
                     <option value="" disabled selected>Select your option</option>
                     <option value="yes">Yes</option>
                     <option value="no">No</option>
                 </select>
+                <br /><br />
+
+                <label for="reason">Reason for Visit:</label>
+                <input type="text" id="reason" v-model="reasonForVisit" required placeholder="Enter Reason" />
                 <br /><br />
 
                 <div class="save">
@@ -162,8 +169,15 @@ h2 {
 }
 
 .formli {
-    display: inline-block;
-    text-align: left;
+    /*display: inline-block;*/
+    text-align: right;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
 }
 
 form {
@@ -174,7 +188,7 @@ form {
 
 input,
 select {
-    border: 2px solid #85a392;
+    border: 2px solid rgb(68, 127, 204);
     /* Example border style */
     border-radius: 4px;
     /* Rounded corners */
@@ -182,17 +196,18 @@ select {
     /* Some padding for visual comfort */
     margin-bottom: 10px;
     /* Space below each element */
-    color: grey;
-}
-
-input::placeholder {
-    color: grey; /* Placeholder text color */
-    opacity: 1; /* Full opacity */
 }
 
 input:hover {
-    box-shadow: 3px 3px rgb(129, 184, 99);
+    box-shadow: 3px 3px rgb(68, 127, 204);
     border-radius: 2px;
+}
+
+select:hover {
+    /* change to nus blue */
+    box-shadow: 3px 3px rgb(68, 127, 204);
+    border-radius: 2px;
+
 }
 
 .save {
@@ -200,7 +215,7 @@ input:hover {
 }
 
 #savebutton {
-    border: 2px solid #85a392;
+    border: 2px solid rgb(68, 127, 204);
     /* Matching the form elements */
     background-color: #f3f3f3;
     /* Light background */
