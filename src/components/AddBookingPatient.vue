@@ -4,7 +4,7 @@ import { getFirestore } from 'firebase/firestore';
 import { collection, addDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-const db = getFirestore(firebaseApp)
+const db = getFirestore(firebaseApp);
 
 export default {
     data() {
@@ -13,9 +13,9 @@ export default {
             user: null,
             selectedDate: new Date().toISOString().split('T')[0], // Initialize with today's date
             selectedTime: '',
+            reasonForVisit: '', // Store the reason for the visit
         };
     },
-
     computed: {
         timeOptions() {
             const options = [];
@@ -57,7 +57,6 @@ export default {
                     }
 
                     console.log(currentHour)
-                    console.log(currentMinute)
 
                     currentMinute += 30;
                     if (currentMinute >= 60) {
@@ -77,7 +76,6 @@ export default {
             this.selectedDate = newDate;
         }
     },
-
     mounted() {
         const auth = getAuth();
         onAuthStateChanged(auth, (user) => {
@@ -86,68 +84,66 @@ export default {
             }
         });
     },
-
     methods: {
         async savetofs() {
-            console.log("IN AC")
-
             let date = document.getElementById("date").value;
             let time = document.getElementById("time").value;
             let teleconsult = document.getElementById("teleconsult").value;
+            let reason = document.getElementById("reason").value; // Get the reason from the form
             const timestamp = new Date(`${date}T${time}`).valueOf();
 
             alert("Booking appointment...");
 
             try {
-                console.log(String(this.user.email));
+                console.log(this.user.email);
                 console.log(this.user.uid);
                 const docRef = await addDoc(collection(db, "appointments"), {
                     patientId: this.user.uid,
                     date: date,
                     time: time,
                     teleconsult: teleconsult,
+                    reasonForVisit: reason, // Save the reason in Firebase
                     timestamp: timestamp
                 });
-                console.log(docRef);
+                console.log(docRef.id);
                 document.getElementById('myform').reset();
                 this.$emit("added");
-            }
-            catch (error) {
+            } catch (error) {
                 console.error("Error adding document: ", error);
             }
         },
-
     }
 };
 </script>
 
+
 <template>
     <div class="container">
         <form id="myform">
-            <v-card title="Book and Appointment"> </v-card>
-            <!-- <h2>Book an Appointment</h2> -->
+            <v-card title="Book an Appointment"></v-card>
             <br /><br />
-
-
             <div class="formli">
-                <label for="date">Appointment Date: </label>
-                <input type="date" id="date" v-model="selectedDate" :min="minDate" required=""
-                    placeholder="Enter Date" />
+                <label for="date">Appointment Date:</label>
+                <input type="date" id="date" v-model="selectedDate" :min="minDate" required placeholder="Enter Date" />
                 <br /><br />
 
-                <label for="time">Appointment Time: </label>
+                <label for="time">Appointment Time:</label>
                 <select id="time" required v-model="selectedTime">
                     <option value="" disabled selected>Select your option</option>
                     <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
                 </select>
                 <br /><br />
 
-                <label for="teleconsult">Teleconsult: </label>
+                <label for="teleconsult">Teleconsult:</label>
                 <select id="teleconsult" required>
                     <option value="" disabled selected>Select your option</option>
                     <option value="yes">Yes</option>
                     <option value="no">No</option>
                 </select>
+                <br /><br />
+
+                <label for="reason">Reason for Visit:</label>
+                <input type="text" id="reason" v-model="reasonForVisit" required placeholder="Enter Reason" />
                 <br /><br />
 
                 <div class="save">
