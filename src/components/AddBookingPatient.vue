@@ -92,6 +92,11 @@ export default {
             let reason = document.getElementById("reason").value; // Get the reason from the form
             const timestamp = new Date(`${date}T${time}`).valueOf();
 
+            if (date === "" || time === "" || teleconsult === "" || reason === "") {
+                alert("Please fill up all fields in the form");
+                return;
+            }
+
             alert("Booking appointment...");
 
             try {
@@ -123,18 +128,18 @@ export default {
             <v-card title="Book an Appointment"></v-card>
             <br /><br />
             <div class="formli">
-                <label for="date">Appointment Date:</label>
+                <label for="date">Appointment Date: </label>
                 <input type="date" id="date" v-model="selectedDate" :min="minDate" required placeholder="Enter Date" />
                 <br /><br />
 
-                <label for="time">Appointment Time:</label>
+                <label for="time">Appointment Time: </label>
                 <select id="time" required v-model="selectedTime">
                     <option value="" disabled selected>Select your option</option>
                     <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
                 </select>
                 <br /><br />
 
-                <label for="teleconsult">Teleconsult:</label>
+                <label for="teleconsult">Teleconsult: </label>
                 <select id="teleconsult" required>
                     <option value="" disabled selected>Select your option</option>
                     <option value="yes">Yes</option>
@@ -142,12 +147,12 @@ export default {
                 </select>
                 <br /><br />
 
-                <label for="reason">Reason for Visit:</label>
+                <label for="reason">Reason for Visit: </label>
                 <input type="text" id="reason" v-model="reasonForVisit" required placeholder="Enter Reason" />
                 <br /><br />
 
                 <div class="save">
-                    <button id="savebutton" type="button" v-on:click="savetofs">
+                    <button id="savebutton" type="submit" v-on:click="savetofs">
                         Save
                     </button>
                 </div>
