@@ -51,9 +51,9 @@ export default {
         const docData = doc.data();
         const docObj = {
           sn: counter,
-          date: docData["Date"],
-          time: docData["Time"],
-          teleconsult: docData["Teleconsult"],
+          date: docData["date"],
+          time: docData["time"],
+          teleconsult: docData["teleconsult"],
           mc: "NIL"
         }
         this.data.push(docObj);
