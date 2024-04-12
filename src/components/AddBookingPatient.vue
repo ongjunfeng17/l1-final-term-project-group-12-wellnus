@@ -119,9 +119,11 @@ export default {
 <template>
     <div class="container">
         <form id="myform">
-            <h2>Book an Appointment</h2>
+            <v-card title = "Book and Appointment"> </v-card>
+            <!-- <h2>Book an Appointment</h2> -->
             <br /><br />
 
+            
             <div class="formli">
                 <label for="date">Appointment Date: </label>
                 <input type="date" id="date" v-model="selectedDate" :min="minDate" required=""
@@ -159,8 +161,15 @@ h2 {
 }
 
 .formli {
-    display: inline-block;
-    text-align: left;
+    /*display: inline-block;*/
+    text-align: right;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
 }
 
 form {
@@ -171,7 +180,7 @@ form {
 
 input,
 select {
-    border: 2px solid #85a392;
+    border: 2px solid rgb(68, 127, 204);
     /* Example border style */
     border-radius: 4px;
     /* Rounded corners */
@@ -182,8 +191,15 @@ select {
 }
 
 input:hover {
-    box-shadow: 3px 3px rgb(129, 184, 99);
+    box-shadow: 3px 3px rgb(68, 127, 204);
     border-radius: 2px;
+}
+
+select:hover {
+    /* change to nus blue */
+    box-shadow: 3px 3px rgb(68, 127, 204);
+    border-radius: 2px;
+
 }
 
 .save {
@@ -191,7 +207,7 @@ input:hover {
 }
 
 #savebutton {
-    border: 2px solid #85a392;
+    border: 2px solid rgb(68, 127, 204);
     /* Matching the form elements */
     background-color: #f3f3f3;
     /* Light background */
