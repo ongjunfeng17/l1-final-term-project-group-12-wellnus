@@ -152,7 +152,7 @@ export default {
                 <br /><br />
 
                 <div class="save">
-                    <button id="savebutton" type="submit" v-on:click="savetofs">
+                    <button id="savebutton" type="button" v-on:click="savetofs">
                         Save
                     </button>
                 </div>
