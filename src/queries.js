@@ -1,6 +1,6 @@
 import firebaseApp from './firebase.js';
-import { getDocs, getFirestore } from 'firebase/firestore';
-import { doc, getDoc, collection } from 'firebase/firestore';
+import { getDocs, getFirestore, where } from 'firebase/firestore';
+import { doc, getDoc, collection, query } from 'firebase/firestore';
 
 const db = getFirestore(firebaseApp)
 
@@ -18,3 +18,13 @@ export async function getUserRole(userId) {
     return null;
 };
 
+export async function getUserIdByEmail(email) {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("email", "==", email));
+    const querySnapshot = await getDocs(q);
+    let id = "";
+    querySnapshot.forEach((doc) => {
+        id = doc.id;
+    });
+    return id;
+}

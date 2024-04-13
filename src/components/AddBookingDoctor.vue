@@ -3,6 +3,7 @@ import firebaseApp from '../firebase.js';
 import { getFirestore } from 'firebase/firestore';
 import { collection, addDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getUserIdByEmail } from "../queries.js";
 
 const db = getFirestore(firebaseApp);
 
@@ -14,6 +15,7 @@ export default {
             selectedDate: new Date().toISOString().split('T')[0], // Initialize with today's date
             selectedTime: '',
             reasonForVisit: '', // Store the reason for the visit
+            selectedEmail: ''
         };
     },
     computed: {
@@ -88,9 +90,21 @@ export default {
         async savetofs() {
             let date = document.getElementById("date").value;
             let time = document.getElementById("time").value;
+            let patient = document.getElementById("patient").value;
             let teleconsult = document.getElementById("teleconsult").value;
             let reason = document.getElementById("reason").value; // Get the reason from the form
             const timestamp = new Date(`${date}T${time}`).valueOf();
+
+            if (date === "" || time === "" || patient === "" || teleconsult === "" || reason === "") {
+                alert("Please fill up all fields in the form");
+                return;
+            }
+
+            const patientId = await getUserIdByEmail(patient);
+            if (patientId === "") {
+                alert("You have entered an invalid patient email, please try again.");
+                return;
+            }
 
             alert("Booking appointment...");
 
@@ -98,10 +112,9 @@ export default {
                 console.log(this.user.email);
                 console.log(this.user.uid);
                 const docRef = await addDoc(collection(db, "appointments"), {
-                    patientId: this.user.uid,
+                    patientId: patientId,
                     date: date,
-                    time: time, 
-                    patient: patient,
+                    time: time,
                     teleconsult: teleconsult,
                     reasonForVisit: reason, // Save the reason in Firebase
                     timestamp: timestamp
@@ -124,11 +137,11 @@ export default {
             <v-card title="Book an Appointment"></v-card>
             <br /><br />
             <div class="formli">
-                <label for="date">Appointment Date:</label>
+                <label for="date">Appointment Date: </label>
                 <input type="date" id="date" v-model="selectedDate" :min="minDate" required placeholder="Enter Date" />
                 <br /><br />
 
-                <label for="time">Appointment Time:</label>
+                <label for="time">Appointment Time: </label>
                 <select id="time" required v-model="selectedTime">
                     <option value="" disabled selected>Select your option</option>
                     <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
@@ -141,7 +154,7 @@ export default {
                 <br /><br />
 
 
-                <label for="teleconsult">Teleconsult:</label>
+                <label for="teleconsult">Teleconsult: </label>
                 <select id="teleconsult" required>
                     <option value="" disabled selected>Select your option</option>
                     <option value="yes">Yes</option>
@@ -149,7 +162,7 @@ export default {
                 </select>
                 <br /><br />
 
-                <label for="reason">Reason for Visit:</label>
+                <label for="reason">Reason for Visit: </label>
                 <input type="text" id="reason" v-model="reasonForVisit" required placeholder="Enter Reason" />
                 <br /><br />
 
