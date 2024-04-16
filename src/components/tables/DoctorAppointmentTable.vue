@@ -27,6 +27,7 @@ export default {
       { title: "Time", key: "time", align: "center" },
       { title: "Patient", key: "email", align: "center" },
       { title: "Teleconsult", key: "teleconsult", align: "center" },
+      { title: "MC", key: "mc", align: "center" },
       { title: "Actions", key: "actions", sortable: false, align: "center" },
     ],
     data: [],
@@ -51,7 +52,7 @@ export default {
           time: "17:30",
           email: "e1234567@u.nus.edu",
           teleconsult: "NIL",
-          MC: "NIL",
+          mc: "yes"
         },
       ];
     },
