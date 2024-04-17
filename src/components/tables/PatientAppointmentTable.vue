@@ -5,7 +5,7 @@
     :sort-by="[{ key: 'date', order: 'asc' }]"
   >
     <template v-slot:item.actions="{ item }">
-      <v-icon size="small" @click="deleteItem(item.date)" color="black">
+      <v-icon size="small" @click="deleteItem(item.id)" color="black">
         $delete
       </v-icon>
     </template>
@@ -14,8 +14,8 @@
 
 <script>
 import firebaseApp from "../../firebase.js";
-import { getDocs, getFirestore, deleteDoc } from "firebase/firestore";
-import { collection, query, where } from "firebase/firestore";
+import { getDocs, getFirestore, deleteDoc, collection, query, where } from "firebase/firestore";
+import { doc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 const db = getFirestore(firebaseApp);
 
@@ -56,7 +56,13 @@ export default {
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
         const docData = doc.data();
+        console.log(doc.id);
         const docObj = {
+          
+          /* Added a new field doc.id (appointment id) 
+           * because we need to delete specific appointments
+           */
+          id: doc.id,
           sn: counter,
           date: docData["date"],
           time: docData["time"],
@@ -67,14 +73,12 @@ export default {
         counter++;
       });
     },
-    async deleteItem(date) { 
-      // item = document name or date of appointment
-      const auth = getAuth();
-      const userEmail = auth.currentUser["email"];
-      alert("You are going to cancel an appointment");
-      await deleteDoc(doc(db, userEmail, date));
-      this.data = this.data.filter((dataItem) => dataItem.date !== date);
-      alert("Your appointment has been cancelled successfully");
+    async deleteItem(id) { 
+        // using appointment id to delete appointment
+        alert("You are going to cancel an appointment");
+        await deleteDoc(doc(db, "appointments", id));
+        this.data = this.data.filter((dataItem) => dataItem.id !== id);
+        alert("Your appointment has been cancelled successfully");
       
     },
   },

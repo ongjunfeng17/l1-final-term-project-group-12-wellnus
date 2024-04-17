@@ -5,7 +5,7 @@
     :sort-by="[{ key: 'date', order: 'asc' }]"
   >
     <template v-slot:item.actions="{ item }">
-      <v-icon size="small" @click="deleteItem(item)" color="black">
+      <v-icon size="small" @click="deleteItem(item.id)" color="black">
         $delete
       </v-icon>
     </template>
@@ -46,7 +46,7 @@ export default {
   methods: {
     initialize() {
       this.data = [
-        {
+        { id: "test",
           sn: 1,
           date: "13/05/24",
           time: "17:30",
@@ -56,7 +56,15 @@ export default {
         },
       ];
     },
-    deleteItem(item) {},
+    async deleteItem(id) {
+        id = "test"
+        alert("You are going to cancel an appointment");
+        // Uncommented the two lines below to cancel appointments
+        
+        // await deleteDoc(doc(db, "appointments", id));
+        // this.data = this.data.filter((dataItem) => dataItem.id !== id);
+        alert("Your appointment has been cancelled successfully");
+    },
   },
 };
 </script>
