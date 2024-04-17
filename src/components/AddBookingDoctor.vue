@@ -114,6 +114,7 @@ export default {
                 console.log(this.user.uid);
                 const docRef = await addDoc(collection(db, "appointments"), {
                     patientId: patientId,
+                    email: patient,
                     date: date,
                     time: time,
                     teleconsult: teleconsult,
