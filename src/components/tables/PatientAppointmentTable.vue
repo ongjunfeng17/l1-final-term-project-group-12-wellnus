@@ -16,7 +16,6 @@
 import firebaseApp from "../../firebase.js";
 import { getDocs, getFirestore, deleteDoc, collection, query, where } from "firebase/firestore";
 import { doc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 const db = getFirestore(firebaseApp);
 
 export default {
