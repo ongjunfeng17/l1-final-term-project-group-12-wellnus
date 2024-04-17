@@ -86,13 +86,15 @@ export default {
     },
     methods: {
         async savetofs() {
+            // Get the user input information from the form
             let date = document.getElementById("date").value;
             let time = document.getElementById("time").value;
             let teleconsult = document.getElementById("teleconsult").value;
             let needMC = document.getElementById("needMC").value;
-            let reason = document.getElementById("reason").value; // Get the reason from the form
+            let reason = document.getElementById("reason").value; 
             const timestamp = new Date(`${date}T${time}`).valueOf();
 
+            // Check if there is any blank fields, if there is, reject the submission
             if (date === "" || time === "" || teleconsult === "" || needMC === "" || reason === "") {
                 alert("Please fill up all fields in the form");
                 return;
@@ -101,15 +103,17 @@ export default {
             alert("Booking appointment...");
 
             try {
+                // Save the user input in Firebase
                 console.log(this.user.email);
                 console.log(this.user.uid);
                 const docRef = await addDoc(collection(db, "appointments"), {
                     patientId: this.user.uid,
+                    email: this.user.email,
                     date: date,
                     time: time,
                     teleconsult: teleconsult,
                     needMC: needMC,
-                    reasonForVisit: reason, // Save the reason in Firebase
+                    reasonForVisit: reason, 
                     timestamp: timestamp
                 });
                 console.log(docRef.id);
