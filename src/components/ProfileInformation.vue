@@ -61,7 +61,7 @@
       </v-table>
     </v-card>
     <br/>
-    <v-card subtitle="Medical Information">
+    <v-card v-if="state.role === 'Student'" subtitle="Medical Information">
       <v-table>
         
         <tbody>
@@ -96,6 +96,18 @@
       
     
       </v-table>
+    </v-card>
+
+    <v-card v-else subtitle="Office Hours" style="align-items: left;">
+      <p style="text-align: left; padding-left: 30%;"> <strong>Mondays to Wednesdays : </strong>8.30am - 12.00pm, 1.30pm - 5.30pm </p>
+      <br/>
+      <p style="text-align: left; padding-left: 30%;"> <strong>Thursdays :</strong> 8.30am - 12.00pm, 1.30pm - 4.30pm </p>
+      <br/>
+      <p style="text-align: left; padding-left: 30%;"> <strong>Fridays : </strong>8.30am - 12.00pm, 1.30pm - 5.00pm </p>
+      <br/>
+      <p style="text-align: left; padding-left: 30%;"> <strong>Saturdays, Sundays & Public Holidays : </strong>Closed</p>
+
+      <br/>
     </v-card>
   </form>
 </template>
