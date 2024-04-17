@@ -52,22 +52,22 @@ export default {
 
 <template>
   <div v-if="user">
-    Upcoming Appointments
     <v-container v-if="userRole === 'patient'">
+      <h1>Upcoming Appointments</h1>
+      <br>
       <PatientAppointmentTable :user='user'/>
     </v-container>
 
     <v-container v-else-if="userRole === 'doctor'">
+      <h1>Today's Active Appointments</h1>
+      <br>
       <DoctorAppointmentTable :user='user'/>
     </v-container>
 
-    Past Appointments
     <v-container v-if="userRole === 'patient'">
+      <h1>Past Appointments</h1>
+      <br>
       <PatientPastApptTable :user='user'/>
-    </v-container>
-
-    <v-container v-else-if="userRole === 'doctor'">
-      <DoctorAppointmentTable :user='user'/>
     </v-container>
   </div>
 </template>

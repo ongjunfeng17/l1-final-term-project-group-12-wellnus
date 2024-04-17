@@ -5,7 +5,7 @@
     :sort-by="[{ key: 'date', order: 'asc' }]"
   >
     <template v-slot:item.actions="{ item }">
-      <v-icon size="small" @click="deleteItem(item.id)" color="black">
+      <v-icon size="small" @click="attendTo(item.id)" color="black">
         $delete
       </v-icon>
     </template>
@@ -13,22 +13,22 @@
 </template>
 
 <script>
+import firebaseApp from "../../firebase.js";
+import { getDocs, getFirestore, collection, query, where } from "firebase/firestore";
+const db = getFirestore(firebaseApp);
+
 export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
     headers: [
-      {
-        title: "S/N",
-        align: "start",
-        key: "sn",
-      },
+      { title: "S/N", key: "sn",  align: "center" },
+      { title: "Patient Email", key: "email", align: "center" },
       { title: "Date (DD/MM/YY)", key: "date", align: "center" },
       { title: "Time", key: "time", align: "center" },
-      { title: "Patient", key: "email", align: "center" },
       { title: "Teleconsult", key: "teleconsult", align: "center" },
       { title: "MC", key: "mc", align: "center" },
-      { title: "Actions", key: "actions", sortable: false, align: "center" },
+      { title: "Actions", key: "actions", sortable: false, align: "center" }
     ],
     data: [],
   }),
@@ -44,26 +44,37 @@ export default {
   },
 
   methods: {
-    initialize() {
-      this.data = [
-        { id: "test",
-          sn: 1,
-          date: "13/05/24",
-          time: "17:30",
-          email: "e1234567@u.nus.edu",
-          teleconsult: "NIL",
-          mc: "yes"
-        },
-      ];
+    async initialize() {
+      const todayString = new Date().toLocaleDateString("sv");
+      const q = query(collection(db, "appointments"), 
+          where("date", "==", todayString));
+      const querySnapshot = await getDocs(q);
+      
+      let counter = 1;
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        const docData = doc.data();
+        console.log(doc.id);
+        const docObj = {
+          
+          /* Added a new field doc.id (appointment id) 
+           * because we need to delete specific appointments
+           */
+          id: doc.id,
+          sn: counter,
+          email: docData["email"],
+          date: docData["date"],
+          time: docData["time"],
+          teleconsult: docData["teleconsult"],
+          mc: docData["needMC"]
+        }
+        this.data.push(docObj);
+        counter++;
+      });
     },
-    async deleteItem(id) {
-        id = "test"
-        alert("You are going to cancel an appointment");
-        // Uncommented the two lines below to cancel appointments
-        
-        // await deleteDoc(doc(db, "appointments", id));
-        // this.data = this.data.filter((dataItem) => dataItem.id !== id);
-        alert("Your appointment has been cancelled successfully");
+    async attendTo(id) { 
+        // using appointment id to delete appointment
+        alert("You are going to attend to user " + id);
     },
   },
 };
