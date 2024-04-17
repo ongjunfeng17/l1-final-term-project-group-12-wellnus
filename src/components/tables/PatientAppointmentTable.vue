@@ -28,6 +28,7 @@ export default {
       { title: "Date (DD/MM/YY)", key: "date", align: "center" },
       { title: "Time", key: "time", align: "center" },
       { title: "Teleconsult", key: "teleconsult", align: "center" },
+      { title: "MC", key: "mc", align: "center" },
       { title: "Actions", key: "actions", sortable: false, align: "center" }
     ],
     data: [],
@@ -60,7 +61,7 @@ export default {
           date: docData["date"],
           time: docData["time"],
           teleconsult: docData["teleconsult"],
-          mc: "NIL"
+          mc: docData["needMC"]
         }
         this.data.push(docObj);
         counter++;

@@ -89,10 +89,11 @@ export default {
             let date = document.getElementById("date").value;
             let time = document.getElementById("time").value;
             let teleconsult = document.getElementById("teleconsult").value;
+            let needMC = document.getElementById("needMC").value;
             let reason = document.getElementById("reason").value; // Get the reason from the form
             const timestamp = new Date(`${date}T${time}`).valueOf();
 
-            if (date === "" || time === "" || teleconsult === "" || reason === "") {
+            if (date === "" || time === "" || teleconsult === "" || needMC === "" || reason === "") {
                 alert("Please fill up all fields in the form");
                 return;
             }
@@ -107,6 +108,7 @@ export default {
                     date: date,
                     time: time,
                     teleconsult: teleconsult,
+                    needMC: needMC,
                     reasonForVisit: reason, // Save the reason in Firebase
                     timestamp: timestamp
                 });
@@ -141,6 +143,14 @@ export default {
 
                 <label for="teleconsult">Teleconsult: </label>
                 <select id="teleconsult" required>
+                    <option value="" disabled selected>Select your option</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+                <br /><br />
+
+                <label for="needMC">MC: </label>
+                <select id="needMC" required>
                     <option value="" disabled selected>Select your option</option>
                     <option value="yes">Yes</option>
                     <option value="no">No</option>
