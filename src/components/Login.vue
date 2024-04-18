@@ -70,7 +70,6 @@
                                             <h6 class="text-center">
                                                 Let's get you all set up!
                                             </h6>
-                                            <br>
                                         </v-card-text>
                                         <div class="text-center">
                                             <v-btn tile outlined dark @click="step++">SIGN UP</v-btn>
@@ -93,7 +92,6 @@
                                             <h6 class="text-center">
                                                 Log in to your account right here!
                                             </h6>
-                                            <br>
                                         </v-card-text>
                                         <div class="text-center">
                                             <v-btn tile outlined dark @click="step--">Log in</v-btn>
