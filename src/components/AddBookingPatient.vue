@@ -11,9 +11,12 @@ export default {
         return {
             minDate: new Date().toISOString().split('T')[0], // Today's date in YYYY-MM-DD format
             user: null,
-            selectedDate: new Date().toISOString().split('T')[0], // Initialize with today's date
-            selectedTime: '',
+            selectedDate: null, // Initialize with today's date
+            selectedTime: null,
+            dateOptions: [],
             reasonForVisit: '', // Store the reason for the visit
+            teleconsult: null,
+            needMC: null,
         };
     },
     computed: {
@@ -56,7 +59,7 @@ export default {
                         options.push(time);
                     }
 
-                    console.log(currentHour)
+                    // console.log(currentHour)
 
                     currentMinute += 30;
                     if (currentMinute >= 60) {
@@ -72,8 +75,8 @@ export default {
 
     watch: {
         // Watch for changes in the date selection to update the min time accordingly
-        selectedDate(newDate, oldDate) {
-            this.selectedDate = newDate;
+        selectedDate() {
+            this.$forceUpdate(); // Force update to refresh timeOptions based on the new selectedDate
         }
     },
     mounted() {
@@ -83,19 +86,35 @@ export default {
                 this.user = user;
             }
         });
+
+        this.generateDateOptions();
     },
     methods: {
+        generateDateOptions() {
+            const dates = [];
+            const today = new Date();
+            const timeZoneOffset = 8 * 60 * 60 * 1000; // 8 hours in milliseconds
+            const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+            for (let i = 1; i <= 7; i++) {
+                const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+                const sgtDate = new Date(date.getTime() + timeZoneOffset); // Adjust to Singapore Time Zone
+                const dayName = weekDays[sgtDate.getDay()];
+
+                //console.log(sgtDate.getDay() + " " + sgtDate)
+                if (sgtDate.getDay() !== 0 && sgtDate.getDay() !== 6) { // Exclude Sundays (0) and Saturdays (6)
+                    dates.push(sgtDate.toISOString().split('T')[0] + " (" + dayName + ")");
+                }
+            }
+            this.dateOptions = dates;
+        },
+
         async savetofs() {
             // Get the user input information from the form
-            let date = document.getElementById("date").value;
-            let time = document.getElementById("time").value;
-            let teleconsult = document.getElementById("teleconsult").value;
-            let needMC = document.getElementById("needMC").value;
-            let reason = document.getElementById("reason").value; 
-            const timestamp = new Date(`${date}T${time}`).valueOf();
-
-            // Check if there is any blank fields, if there is, reject the submission
-            if (date === "" || time === "" || teleconsult === "" || needMC === "" || reason === "") {
+            const { selectedTime, teleconsult, needMC, reasonForVisit, user } = this;
+            const selectedDate = this.selectedDate.split(' ')[0];
+            
+            if (!selectedDate || !selectedTime || !teleconsult || !needMC || !reasonForVisit) {
                 alert("Please fill up all fields in the form");
                 return;
             }
@@ -103,144 +122,113 @@ export default {
             alert("Booking appointment...");
 
             try {
-                // Save the user input in Firebase
-                console.log(this.user.email);
-                console.log(this.user.uid);
                 const docRef = await addDoc(collection(db, "appointments"), {
-                    patientId: this.user.uid,
-                    email: this.user.email,
-                    date: date,
-                    time: time,
-                    teleconsult: teleconsult,
-                    needMC: needMC,
-                    reasonForVisit: reason, 
-                    timestamp: timestamp
+                    patientId: user ? user.uid : null, // Include user ID
+                    email: user ? user.email : '',
+                    date: selectedDate,
+                    time: selectedTime,
+                    teleconsult,
+                    needMC,
+                    reasonForVisit,
+                    timestamp: new Date(`${selectedDate}T${selectedTime}`).getTime()
                 });
-                console.log(docRef.id);
-                document.getElementById('myform').reset();
-                this.$emit("added");
+                console.log("Document written with ID: ", docRef.id);
+                alert('Appointment booked successfully!');
             } catch (error) {
                 console.error("Error adding document: ", error);
+                alert('Failed to book appointment. Please try again.');
             }
         },
     }
 };
 </script>
 
-
 <template>
-    <div class="container">
-        <form id="myform">
-            <v-card title="Book an Appointment"></v-card>
-            <br /><br />
-            <div class="formli">
-                <label for="date">Appointment Date: </label>
-                <input type="date" id="date" v-model="selectedDate" :min="minDate" required placeholder="Enter Date" />
-                <br /><br />
+    <v-container>
+        <v-row align="center" justify="center">
+            <v-col cols="12" sm="10">
+                <v-card class="elevation-6 mt-5">
+                    <v-card-title class="pt-5">Book an Appointment</v-card-title>
+                    <v-card-text class="pa-1">
+                        <v-row align="center" justify="center">
+                            <v-col cols="12" sm="8">
+                                <v-select v-model="selectedDate" :items="dateOptions" label="Appointment Date" required
+                                    outlined dense class="mt-1" color="blue">
+                                    <template v-slot:prepend-item>
+                                        <v-list-item>
+                                            <v-list-item-content>
+                                                <v-list-item-title>Select a date</v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                    </template>
+                                </v-select>
 
-                <label for="time">Appointment Time: </label>
-                <select id="time" required v-model="selectedTime">
-                    <option value="" disabled selected>Select your option</option>
-                    <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
-                </select>
-                <br /><br />
+                                <v-select v-model="selectedTime" :items="timeOptions" label="Appointment Time" required
+                                    outlined dense class="mt-1" color="blue">
+                                    <template v-slot:prepend-item>
+                                        <v-list-item>
+                                            <v-list-item-content>
+                                                <v-list-item-title>Select your option</v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                    </template>
+                                </v-select>
 
-                <label for="teleconsult">Teleconsult: </label>
-                <select id="teleconsult" required>
-                    <option value="" disabled selected>Select your option</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
-                <br /><br />
+                                <v-select v-model="teleconsult" :items="['Yes', 'No']" label="Teleconsult" required
+                                    outlined dense class="mt-1" color="blue">
+                                    <template v-slot:prepend-item>
+                                        <v-list-item>
+                                            <v-list-item-content>
+                                                <v-list-item-title>Select your option</v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                    </template>
+                                </v-select>
 
-                <label for="needMC">MC: </label>
-                <select id="needMC" required>
-                    <option value="" disabled selected>Select your option</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
-                <br /><br />
+                                <v-select v-model="needMC" :items="['Yes', 'No']" label="MC" required outlined dense
+                                    class="mt-1" color="blue">
+                                    <template v-slot:prepend-item>
+                                        <v-list-item>
+                                            <v-list-item-content>
+                                                <v-list-item-title>Select your option</v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                    </template>
+                                </v-select>
 
-                <label for="reason">Reason for Visit: </label>
-                <input type="text" id="reason" v-model="reasonForVisit" required placeholder="Enter Reason" />
-                <br /><br />
-
-                <div class="save">
-                    <button id="savebutton" type="button" v-on:click="savetofs">
-                        Save
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
+                                <v-text-field v-model="reasonForVisit" label="Reason for Visit" outlined dense
+                                    color="blue" autocomplete="false" class="mt-1" />
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                    <v-row justify="center">
+                        <v-col cols="6" sm="4" class="mb-5">
+                            <v-btn color="blue" dark tile @click="savetofs">Save</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <style scoped>
-h2 {
-    background-color: rgb(129, 184, 99);
+.v-application .rounded-bl-xl {
+    border-bottom-left-radius: 300px !important;
 }
 
-.formli {
-    /*display: inline-block;*/
-    text-align: right;
+.v-application .rounded-br-xl {
+    border-bottom-right-radius: 300px !important;
 }
 
-.container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-}
-
-form {
-    text-align: center;
-    align-items: center;
-    margin: auto;
-}
-
-input,
-select {
-    border: 2px solid rgb(68, 127, 204);
-    /* Example border style */
-    border-radius: 4px;
-    /* Rounded corners */
-    padding: 8px;
-    /* Some padding for visual comfort */
-    margin-bottom: 10px;
-    /* Space below each element */
-}
-
-input:hover {
-    box-shadow: 3px 3px rgb(68, 127, 204);
-    border-radius: 2px;
-}
-
-select:hover {
-    /* change to nus blue */
-    box-shadow: 3px 3px rgb(68, 127, 204);
-    border-radius: 2px;
-
-}
-
-.save {
-    text-align: center;
-}
-
-#savebutton {
-    border: 2px solid rgb(68, 127, 204);
-    /* Matching the form elements */
-    background-color: #f3f3f3;
-    /* Light background */
-    border-radius: 4px;
-    /* Rounded corners */
-    padding: 10px 20px;
-    /* Padding for a larger clickable area */
+.hover-change-color:hover {
+    color: rgb(238, 124, 48);
     cursor: pointer;
-    /* Change mouse pointer to indicate it's clickable */
 }
 
-#savebutton:hover {
-    background-color: #e2e2e2;
-    /* Slightly darker on hover */
+.blue--text.no-hover:hover {
+    color: inherit;
+    /* Keeps the color unchanged on hover */
+    cursor: pointer;
 }
 </style>

@@ -1,5 +1,4 @@
 <template>
-    <!-- forked code, to customise -->
     <v-container>
         <v-row align="center" justify="center">
             <v-col cols="12" sm="10">
