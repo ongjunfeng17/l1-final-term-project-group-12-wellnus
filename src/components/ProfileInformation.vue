@@ -109,6 +109,73 @@
 
       <br/>
     </v-card>
+    <!-- add MC Table here:
+      Row: each day, Col: Emails, action: add email (push into the array)
+    -->
+    <br/>
+    <v-card v-if="state.role === 'Student'" subtitle="Email List of Medical Certificate">
+      <v-table>
+        
+        <tbody>
+          <tr>
+            <td> Monday </td>
+            <td> 
+              <span v-for="item in state.Mon" :key="item"> {{item }} <br/></span>
+              
+            </td>
+            <td v-if="!state.monAdd" v-on:click="() => {addEmail('mon')}" class="add"> + Add</td>
+            <td v-else><input type="text" class="input-outline" v-model="state.emailToAdd"> <span v-on:click="() => {doneAddEmail('mon')}">Done</span></td>
+            
+          </tr>
+          <tr>
+            <td> Tuesday </td>
+            <td>
+              <span v-for="item in state.Tue" :key="item"> {{item }}<br/></span>
+              
+            </td>
+            <td v-if="!state.tueAdd" v-on:click="() => {addEmail('tue')}" class="add"> + Add</td>
+            <td v-else><input type="text" class="input-outline" v-model="state.emailToAdd"> <span v-on:click="() => {doneAddEmail('tue')}">Done</span></td>
+            
+          </tr>
+          <tr>
+            <td> Wednesday </td>
+            <td>
+              <span v-for="item in state.Wed" :key="item"> {{item }} <br/></span>
+              
+            </td>
+            <td v-if="!state.wedAdd" v-on:click="() => {addEmail('wed')}" class="add"> + Add</td>
+            <td v-else><input type="text" class="input-outline" v-model="state.emailToAdd"> <span v-on:click="() => {doneAddEmail('wed')}">Done</span></td>
+            
+         
+          </tr>
+          <tr>
+            <td> Thursday </td>
+            <td>
+              <span v-for="item in state.Thu" :key="item"> {{item }} <br/></span>
+              
+            </td>
+            <td v-if="!state.thuAdd" v-on:click="() => {addEmail('thu')}" class="add"> + Add</td>
+            <td v-else><input type="text" class="input-outline" v-model="state.emailToAdd"> <span v-on:click="() => {doneAddEmail('thu')}">Done</span></td>
+
+          </tr>
+
+          <tr>
+            <td> Friday </td>
+            <td> 
+              <span v-for="item in state.Fri" :key="item"> {{item }} <br/></span>
+              
+            </td>
+            <td v-if="!state.friAdd" v-on:click="() => {addEmail('fri')}" class="add"> + Add</td>
+            <td v-else><input type="text" class="input-outline" v-model="state.emailToAdd"> <span v-on:click="() => {doneAddEmail('fri')}">Done</span></td>
+
+          </tr>
+        </tbody>
+      
+    
+      </v-table>
+    </v-card>
+    
+    
   </form>
 </template>
 <script setup>
@@ -139,8 +206,19 @@
     drugAllergy: "",
     medicalcon: "",
     phone: "",
-    editing: false
-
+    editing: false,
+    Mon: [],
+    Tue:[],
+    Wed :[], 
+    Thu :[],
+    Fri: [],
+    monAdd: false,
+    tueAdd: false,
+    wedAdd: false,
+    thuAdd: false,
+    friAdd: false,
+    emailToAdd: ""
+    
   };
 
   const state = reactive({
@@ -157,6 +235,117 @@
 
   function makeEdit() {
     state.editing = !state.editing;
+
+  }
+  
+  function addEmail(day) {
+    state.emailToAdd = ""
+    if (day === "mon") {
+      state.monAdd = !state.monAdd;
+      state.tueAdd = false;
+      state.wedAdd = false;
+      state.thuAdd = false;
+      state.friAdd = false;
+    } else if (day === "tue") {
+      state.tueAdd = !state.tueAdd
+      state.monAdd = false;
+      state.wedAdd = false;
+      state.thuAdd = false;
+      state.friAdd = false;
+    } else if (day ===  "wed") {
+      state.wedAdd = !state.wedAdd
+      state.tueAdd = false;
+      state.monAdd = false;
+      state.thuAdd = false;
+      state.friAdd = false;
+    } else if (day === "thu") {
+      state.thuAdd = !state.thuAdd
+      state.tueAdd = false;
+      state.wedAdd = false;
+      state.monAdd = false;
+      state.friAdd = false;
+    } else if (day === "fri") {
+      state.friAdd = !state.friAdd
+      state.tueAdd = false;
+      state.wedAdd = false;
+      state.thuAdd = false;
+      state.monAdd = false;
+    }
+
+  }
+
+  async function doneAddEmail(day) {
+    const mcDoc = doc(db, "medicalcertificates", state.user.uid);
+
+    const mcSnapshot = await getDoc(mcDoc)
+    if (!mcSnapshot.exists()) {
+      await setDoc(mcDoc, {
+        Mon: [],
+        Tue: [],
+        Wed: [],
+        Thu: [],
+        Fri: []
+      })
+    }
+
+
+    if (day === "mon") {
+      if (state.emailToAdd.length > 0) {
+        state.Mon.push(state.emailToAdd);
+        await updateDoc(mcDoc, {
+          Mon: state.Mon
+        })
+        console.log("success")
+
+      }
+      
+    } else if (day === "tue") {
+      if (state.emailToAdd.length > 0) {
+        state.Tue.push(state.emailToAdd);
+        await updateDoc(mcDoc, {
+          Tue: state.Tue
+        })
+        console.log("success")
+
+      }
+      
+    } else if (day ===  "wed") {
+      if (state.emailToAdd.length > 0) {
+      
+        state.Wed.push(state.emailToAdd);
+        await updateDoc(mcDoc, {
+          Wed: state.Wed
+        })
+        console.log("success")
+      }
+      
+    } else if (day === "thu") {
+      if (state.emailToAdd.length > 0) {
+        state.Thu.push(state.emailToAdd);
+        await updateDoc(mcDoc, {
+          Thu: state.Thu
+        })
+        console.log("success")
+      }
+      
+    } else if (day === "fri") {
+      if (state.emailToAdd.length > 0) {
+        state.Fri.push(state.emailToAdd);
+        await updateDoc(mcDoc, {
+          Fri: state.Fri
+        })
+        console.log("success")
+      }
+      
+    }
+
+    // all return to false
+    state.thuAdd = false;
+    state.tueAdd = false;
+    state.wedAdd = false;
+    state.monAdd = false;
+    state.friAdd = false;
+    
 
   }
 
@@ -251,6 +440,27 @@
         state.weight = medData.weight;
         state.phone = medData.phone;
       }
+
+      // get MC Emails
+      const mcDoc = doc(db, "medicalcertificates", state.user.uid);
+      const mcSnapshot = await getDoc(mcDoc);
+      console.log(mcSnapshot.data())
+      if (mcSnapshot.exists()) {
+        const mcData = mcSnapshot.data();
+        state.Mon = mcData.Mon;
+        state.Tue = mcData.Tue;
+        state.Wed = mcData.Wed;
+        state.Thu = mcData.Thu;
+        state.Fri = mcData.Fri;
+        // console.log(mcData.Mon)
+
+      } 
+      
+
+
+
+
+
     }
 
     
@@ -287,5 +497,19 @@ td:first-child {
 
 .btn-right {
   float: right;
+}
+
+.add {
+  text-align: right;
+}
+
+.add:hover {
+  cursor: pointer;
+  color:rgb(68, 127, 204);
+}
+span:hover {
+  cursor: pointer;
+
+
 }
 </style>
