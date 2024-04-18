@@ -147,7 +147,7 @@ export default {
     <v-container>
         <v-row align="center" justify="center">
             <v-col cols="12" sm="10">
-                <v-card class="elevation-6 mt-5">
+                <v-card class="elevation-6 mt-1">
                     <v-card-title class="pt-5">Book an Appointment</v-card-title>
                     <v-card-text class="pa-1">
                         <v-row align="center" justify="center">
