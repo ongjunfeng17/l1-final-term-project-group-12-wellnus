@@ -61,7 +61,11 @@
                                 <v-col cols="12" md="6" class="blue rounded-bl-xl">
                                     <div style="text-align: center; padding: 180px 0">
                                         <v-card-text class="white--text">
-                                            
+                                            <v-row>
+                                                <v-col cols="6" sm="6" class="d-flex justify-end pr-1"><v-img :src="nusLogo" aspect-ratio="1" max-height="60" max-width="140"></v-img></v-col>
+                                                <v-col cols="6" sm="6" class="pl-1"><v-img :src="uhcLogo" aspect-ratio="1" max-height="60" max-width="140"></v-img></v-col>
+                                            </v-row>
+                                            <br>
                                             <h3 class="text-center">Don't Have an Account Yet?</h3>
                                             <h6 class="text-center">
                                                 Let's get you all set up!
@@ -80,10 +84,16 @@
                                 <v-col cols="12" md="6" class="blue rounded-br-xl">
                                     <div style="text-align: center; padding: 180px 0">
                                         <v-card-text class="white--text">
+                                            <v-row>
+                                                <v-col cols="6" sm="6" class="d-flex justify-end pr-1"><v-img :src="nusLogo" aspect-ratio="1" max-height="60" max-width="140"></v-img></v-col>
+                                                <v-col cols="6" sm="6" class="pl-1"><v-img :src="uhcLogo" aspect-ratio="1" max-height="60" max-width="140"></v-img></v-col>
+                                            </v-row>
+                                            <br>
                                             <h3 class="text-center">Already Signed up?</h3>
                                             <h6 class="text-center">
                                                 Log in to your account right here!
                                             </h6>
+                                            <br>
                                         </v-card-text>
                                         <div class="text-center">
                                             <v-btn tile outlined dark @click="step--">Log in</v-btn>
