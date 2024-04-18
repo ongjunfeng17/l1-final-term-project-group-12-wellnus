@@ -9,33 +9,43 @@
                             <v-row>
                                 <v-col cols="12" md="6">
                                     <v-card-text class="mt-12">
-                                        <h4 class="text-center">WellNUS</h4>
+                                        <h1 class="text-center"
+                                            style="color: rgb(23, 60, 124); font-size: 36px; font-weight: bold;">WellNUS
+                                        </h1>
+                                        <br><br>
                                         <h6 class="text-center grey--text">
                                             WellNUS is an app to book and track your appointments at UHC. <br>
-                                            Simply book an appointment and enjoy less waiting time. <br>
+                                            Simply schedule an appointment and proceed directly to UHC at your
+                                            designated time, avoiding lengthy wait times. <br>
                                             Book teleconsults with your doctors at the comfort of your home.
                                         </h6>
                                         <v-row align="center" justify="center">
                                             <v-col cols="12" sm="8">
                                                 <v-text-field v-model="email" label="Email" outlined dense color="blue"
-                                                    autocomplete="false" class="mt-16" />
+                                                    autocomplete="false" class="mt-8" />
                                                 <v-text-field v-model="password" label="Password" outlined dense
                                                     color="blue" autocomplete="false" type="password" />
                                                 <v-row>
-                                                    <v-col cols="12" sm="7">
+                                                    <v-col cols="6" sm="6">
                                                         <div class="d-flex align-center">
-                                                            <input type="checkbox" id="rememberMeCheckbox" v-model="rememberMe" @change="printRememberMeState(rememberMe)" class="mr-2">
-                                                            <label for="rememberMeCheckbox" class="blue--text">Remember Me</label>
+                                                            <input type="checkbox" id="rememberMeCheckbox"
+                                                                v-model="rememberMe"
+                                                                @change="printRememberMeState(rememberMe)" class="mr-2">
+                                                            <label for="rememberMeCheckbox"
+                                                                class="blue--text no-hover">Remember me</label>
                                                         </div>
                                                         <!-- <v-checkbox label="Remember Me" v-model="rememberMe" class="mt-n1" color="blue">
                                                         </v-checkbox> -->
                                                     </v-col>
-                                                    <v-col cols="12" sm="5">
-                                                        <span class="caption blue--text" @click="resetPassword"
-                                                            style="cursor: pointer;">Forgot password?</span>
+                                                    <v-col cols="6" sm="6" class="d-flex justify-end">
+                                                        <span class="caption blue--text hover-change-color"
+                                                            @click="resetPassword" style="cursor: pointer;">Forgot
+                                                            password?</span>
                                                     </v-col>
                                                 </v-row>
-                                                <v-btn color="blue" dark block tile @click="signIn">Log in</v-btn>
+                                                <br>
+                                                <v-btn color="blue" dark block tile @click="signIn" class="mb-12">Log
+                                                    in</v-btn>
 
                                                 <!-- <h5 class="text-center grey--text mt-4 mb-3">
                                                     Or
@@ -51,6 +61,11 @@
                                 <v-col cols="12" md="6" class="blue rounded-bl-xl">
                                     <div style="text-align: center; padding: 180px 0">
                                         <v-card-text class="white--text">
+                                            <v-row>
+                                                <v-col cols="6" sm="6" class="d-flex justify-end pr-1"><v-img :src="nusLogo" aspect-ratio="1" max-height="60" max-width="140"></v-img></v-col>
+                                                <v-col cols="6" sm="6" class="pl-1"><v-img :src="uhcLogo" aspect-ratio="1" max-height="60" max-width="140"></v-img></v-col>
+                                            </v-row>
+                                            <br>
                                             <h3 class="text-center">Don't Have an Account Yet?</h3>
                                             <h6 class="text-center">
                                                 Let's get you all set up!
@@ -68,6 +83,11 @@
                                 <v-col cols="12" md="6" class="blue rounded-br-xl">
                                     <div style="text-align: center; padding: 180px 0">
                                         <v-card-text class="white--text">
+                                            <v-row>
+                                                <v-col cols="6" sm="6" class="d-flex justify-end pr-1"><v-img :src="nusLogo" aspect-ratio="1" max-height="60" max-width="140"></v-img></v-col>
+                                                <v-col cols="6" sm="6" class="pl-1"><v-img :src="uhcLogo" aspect-ratio="1" max-height="60" max-width="140"></v-img></v-col>
+                                            </v-row>
+                                            <br>
                                             <h3 class="text-center">Already Signed up?</h3>
                                             <h6 class="text-center">
                                                 Log in to your account right here!
@@ -81,12 +101,15 @@
 
                                 <v-col cols="12" md="6">
                                     <v-card-text class="mt-12">
-                                        <h4 class="text-center">Sign Up for an Account</h4>
+                                        <h2 class="text-center"
+                                            style="color: rgb(23, 60, 124); font-size: 20px; font-weight: bold;">Sign Up
+                                            for an Account</h2> <br>
                                         <h6 class="text-center grey-s-text">
-                                            Let's get you all set up so you can start booking your
-                                            <br />
+                                            Let's get you all set up so you can start <br /> booking your
+
                                             first appointment
                                         </h6>
+                                        <br>
                                         <v-row align="center" justify="center">
                                             <v-col cols="12" sm="8">
                                                 <v-row>
@@ -104,23 +127,25 @@
                                                 <v-text-field label="Password" v-model="password" outlined dense
                                                     color="blue" s autocomplete="false" type="password" />
                                                 <v-row>
-                                                    <v-col cols="12" sm="7">
+                                                    <v-col cols="12" sm="12">
                                                         <!-- <v-checkbox label="I'm a Doctor" class="mt-n1" color="blue"
                                                             v-model="isDoctor"
                                                             @change="printRole('doctor', isDoctor)"></v-checkbox> -->
 
-                                                        <div class="d-flex align-center">
+                                                        <div class="d-flex align-center justify-center">
                                                             <input type="checkbox" id="doctorCheckbox"
                                                                 v-model="isDoctor"
                                                                 @change="printRole('doctor', isDoctor)" class="mr-2">
-                                                            <label for="doctorCheckbox" class="blue--text">I'm a
+                                                            <label for="doctorCheckbox" class="blue--text no-hover">I'm
+                                                                a
                                                                 Doctor</label>
                                                         </div>
                                                         <br>
 
                                                     </v-col>
                                                 </v-row>
-                                                <v-btn color="blue" dark block tile @click="signUp">Sign up</v-btn>
+                                                <v-btn color="blue" dark block tile @click="signUp" class="mb-12">Sign
+                                                    up</v-btn>
 
 
                                                 <!-- <h5 class="text-center grey--text mt-4 mb-3">
@@ -182,6 +207,8 @@ export default {
         lastName: '',
         isDoctor: false,
         rememberMe: false,
+        nusLogo: "/assets/logos/NUS-logo.png",
+        uhcLogo: "/assets/logos/UHC-logo.png",
     }),
     props: {
         source: String,
@@ -193,11 +220,11 @@ export default {
                 this.$router.push('/appointments');
                 console.log("past user")
             } else {
-                
+
             }
         });
     },
-    
+
 
     methods: {
         // googleSignIn() {
@@ -329,5 +356,16 @@ export default {
 
 .v-application .rounded-br-xl {
     border-bottom-right-radius: 300px !important;
+}
+
+.hover-change-color:hover {
+    color: rgb(238, 124, 48);
+    cursor: pointer;
+}
+
+.blue--text.no-hover:hover {
+    color: inherit;
+    /* Keeps the color unchanged on hover */
+    cursor: pointer;
 }
 </style>
