@@ -26,6 +26,14 @@ export default {
       }
     });
   },
+
+  methods: {
+    handleLogout() {
+      // Handle logout (e.g., update UI, clear data)
+      console.log("Logged out!");
+      this.user = null; // Update user state
+    }
+  },
 };
 </script>
 
@@ -72,7 +80,7 @@ export default {
                 <v-list-item>
                   <router-link to="profile"> Profile Information </router-link>
                 </v-list-item>
-                <v-list-item><LogOut /></v-list-item>
+                <v-list-item><LogOut @logout="handleLogout"/></v-list-item>
               </v-list>
               
             </v-menu>

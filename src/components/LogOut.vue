@@ -3,10 +3,10 @@
 </template>
 
 <script>
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 
 export default {
-  name: "Logout",
+  name: "LogOut",
 
   data() {
     return {
@@ -16,19 +16,18 @@ export default {
 
   mounted() {
     const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        this.user = user;
-      }
-    });
+    this.user = auth.currentUser;
   },
 
   methods: {
     signOut() {
       const auth = getAuth();
-      const user = auth.currentUser;
-      signOut(auth, user);
-      this.$router.push({ name: "Login" });
+      signOut(auth).then(() => {
+        this.$emit('logout');
+        this.$router.push({ name: "Login" });
+      }).catch((error) => {
+        console.error("Logout Failed", error);
+      });
     },
   },
 };
@@ -41,7 +40,6 @@ export default {
   background-color: rgb(68, 127, 204);
   color: white;
 }
-
 #btn:hover {
   background-color: rgb(100, 98, 97);
   box-shadow: 3px 3px grey;
