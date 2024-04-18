@@ -350,5 +350,14 @@ export default {
     border-bottom-right-radius: 300px !important;
 }
 
+.hover-change-color:hover {
+    color: rgb(238, 124, 48);
+    cursor: pointer;
+}
 
+.blue--text.no-hover:hover {
+    color: inherit;
+    /* Keeps the color unchanged on hover */
+    cursor: pointer;
+}
 </style>
