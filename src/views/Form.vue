@@ -58,19 +58,17 @@ export default {
 </script>
 
 <template>
-  <div>
-    <v-container>
-      <div v-if="userRole === 'patient'">
-        <AddBookingPatient />
-      </div>
-      <div v-else-if="userRole === 'doctor'">
-        <AddBookingDoctor />
-      </div>
-      <div v-else>
-        You don't seem to be logged in! Redirecting you to the login page...
-      </div>
-    </v-container>
-  </div>
+  <v-container>
+    <div v-if="userRole === 'patient'">
+      <AddBookingPatient />
+    </div>
+    <div v-else-if="userRole === 'doctor'">
+      <AddBookingDoctor />
+    </div>
+    <div v-else>
+      You don't seem to be logged in! Redirecting you to the login page...
+    </div>
+  </v-container>
 </template>
 
 <style scoped></style>
