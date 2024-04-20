@@ -11,9 +11,9 @@ export default {
 
 <template>
   <v-app>
-    <v-container fluid class="pa-0">
+    <v-container fluid class="pa-0 h-full align-center justify-center">
       <NavBar />
-      <v-container><router-view /></v-container>
+      <v-container class="h-full"><router-view /></v-container>
     </v-container>
   </v-app>
 </template>
