@@ -32,7 +32,7 @@ export default {
       // Handle logout (e.g., update UI, clear data)
       console.log("Logged out!");
       this.user = null; // Update user state
-    }
+    },
   },
 };
 </script>
@@ -75,14 +75,15 @@ export default {
                   v-bind="props"
                 />
               </template>
-              
+
               <v-list>
                 <v-list-item>
-                  <router-link to="profile"> Profile Information </router-link>
+                  <v-btn class="hover:bg-red">
+                    <router-link to="profile"> Profile </router-link>
+                  </v-btn>
                 </v-list-item>
-                <v-list-item><LogOut @logout="handleLogout"/></v-list-item>
+                <v-list-item><LogOut @logout="handleLogout" /></v-list-item>
               </v-list>
-              
             </v-menu>
           </v-col>
         </v-row>
