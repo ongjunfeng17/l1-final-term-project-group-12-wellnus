@@ -1,5 +1,5 @@
 <template>
-  <v-container class="d-flex align-center justify-center h-full w-full bg-red">
+  <v-container class="d-flex align-center justify-center h-full w-full">
     <v-snackbar
       v-model="snackbar.show"
       :timeout="snackbar.timeout"
