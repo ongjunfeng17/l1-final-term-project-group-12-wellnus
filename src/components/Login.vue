@@ -1,4 +1,11 @@
 <template>
+    <v-snackbar v-model="snackbar.show" :timeout="snackbar.timeout" :color="snackbar.color">
+        {{ snackbar.message }}
+        <template v-slot:action="{ attrs }">
+            <v-btn color="white" text v-bind="attrs" @click="snackbar.show = false">Close</v-btn>
+        </template>
+    </v-snackbar>
+
     <v-container>
         <v-row align="center" justify="center">
             <v-col cols="12" sm="10">
@@ -61,8 +68,12 @@
                                     <div style="text-align: center; padding: 180px 0">
                                         <v-card-text class="white--text">
                                             <v-row>
-                                                <v-col cols="6" sm="6" class="d-flex justify-end pr-1"><v-img :src="nusLogo" aspect-ratio="1" max-height="60" max-width="140"></v-img></v-col>
-                                                <v-col cols="6" sm="6" class="pl-1"><v-img :src="uhcLogo" aspect-ratio="1" max-height="60" max-width="140"></v-img></v-col>
+                                                <v-col cols="6" sm="6" class="d-flex justify-end pr-1"><v-img
+                                                        :src="nusLogo" aspect-ratio="1" max-height="60"
+                                                        max-width="140"></v-img></v-col>
+                                                <v-col cols="6" sm="6" class="pl-1"><v-img :src="uhcLogo"
+                                                        aspect-ratio="1" max-height="60"
+                                                        max-width="140"></v-img></v-col>
                                             </v-row>
                                             <br>
                                             <h3 class="text-center">Don't Have an Account Yet?</h3>
@@ -83,8 +94,12 @@
                                     <div style="text-align: center; padding: 180px 0">
                                         <v-card-text class="white--text">
                                             <v-row>
-                                                <v-col cols="6" sm="6" class="d-flex justify-end pr-1"><v-img :src="nusLogo" aspect-ratio="1" max-height="60" max-width="140"></v-img></v-col>
-                                                <v-col cols="6" sm="6" class="pl-1"><v-img :src="uhcLogo" aspect-ratio="1" max-height="60" max-width="140"></v-img></v-col>
+                                                <v-col cols="6" sm="6" class="d-flex justify-end pr-1"><v-img
+                                                        :src="nusLogo" aspect-ratio="1" max-height="60"
+                                                        max-width="140"></v-img></v-col>
+                                                <v-col cols="6" sm="6" class="pl-1"><v-img :src="uhcLogo"
+                                                        aspect-ratio="1" max-height="60"
+                                                        max-width="140"></v-img></v-col>
                                             </v-row>
                                             <br>
                                             <h3 class="text-center">Already Signed up?</h3>
@@ -178,26 +193,6 @@ import 'vuetify/dist/vuetify.min.css';
 export default {
     name: "Login",
 
-    // mounted() {
-    //     //Calling the ui instance
-    //     var ui = firebaseui.auth.AuthUI.getInstance();
-    //     if (!ui) {
-    //         //we need to create the instance only one time
-    //         //initialise the firebaseui widget using firebase.
-    //         ui = new firebaseui.auth.AuthUI(firebase.auth());
-    //     }
-
-    //     var uiConfig = {
-    //         signInSuccessURL: '/appointments',
-    //         signInOptions: [
-    //             firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    //             firebase.auth.EmailAuthProvider.PROVIDER_ID,
-    //         ]
-    //     };
-
-    //     ui.start("#firebaseui-auth-container", uiConfig)
-    // },
-
     data: () => ({
         step: 1,
         email: '',
@@ -208,6 +203,12 @@ export default {
         rememberMe: false,
         nusLogo: "/assets/logos/NUS-logo.png",
         uhcLogo: "/assets/logos/UHC-logo.png",
+        snackbar: {
+            show: false,
+            message: '',
+            timeout: 6000, // milliseconds
+            color: 'red',
+        },
     }),
     props: {
         source: String,
@@ -226,27 +227,11 @@ export default {
 
 
     methods: {
-        // googleSignIn() {
-        //     var provider = new firebase.auth.GoogleAuthProvider();
-        //     firebase.auth().signInWithPopup(provider).then((result) => {
-        //         // This gives you a Google Access Token. You can use it to access the Google API.
-        //         var token = result.credential.accessToken;
-        //         // The signed-in user info.
-        //         var user = result.user;
-        //         // Redirect to '/appointments' or handle the login success scenario
-        //         this.$router.push('/appointments');
-        //     }).catch((error) => {
-        //         // Handle Errors here.
-        //         var errorCode = error.code;
-        //         var errorMessage = error.message;
-        //         // The email of the user's account used.
-        //         var email = error.email;
-        //         // The firebase.auth.AuthCredential type that was used.
-        //         var credential = error.credential;
-        //         // Log the error or show an error message to the user
-        //         console.error("Authentication failed:", errorMessage);
-        //     });
-        // },
+        showSnackbar(message, color = 'red') {
+            this.snackbar.message = message;
+            this.snackbar.show = true;
+            this.snackbar.color = color;
+        },
 
         isValidEmail(email) {
             // Simple regex for basic email validation
@@ -258,13 +243,13 @@ export default {
             this.email = this.email.trim();
             if (!this.isValidEmail(this.email)) {
                 console.error("Invalid email format.");
-                alert("Invalid email format.");
+                this.showSnackbar("Invalid email format.", 'red');
                 return;
             }
 
             if (this.password.length < 6) {
                 console.error("Password must be at least 6 characters long.");
-                alert("Password must be at least 6 characters long.");
+                this.showSnackbar("Password must be at least 6 characters long.", 'red');
                 return;
             }
 
@@ -287,7 +272,7 @@ export default {
                 this.$router.push('/appointments');
             } catch (error) {
                 console.error("Error signing up:", error.message);
-                alert(`Error signing up: ${error.message}`);
+                this.showSnackbar(`Error signing up: ${error.message}`, 'red');
             }
         },
 
@@ -296,7 +281,7 @@ export default {
             this.email = this.email.trim();
             if (!this.isValidEmail(this.email)) {
                 console.error("Invalid email format.");
-                alert("Invalid email format.");
+                this.showSnackbar("Invalid email format.", 'red');
                 return;
             }
             const persistenceType = this.rememberMe ? firebase.auth.Auth.Persistence.LOCAL : firebase.auth.Auth.Persistence.SESSION;
@@ -310,10 +295,10 @@ export default {
                 console.error("Error signing in:", error.message);
                 // Check if the error code is for a wrong password
                 if (error.code === "auth/invalid-credential") {
-                    alert("The password you entered is incorrect. Please try again.");
+                    this.showSnackbar("The password you entered is incorrect. Please try again.", 'red');
                 } else {
                     // For other types of errors, you might want to handle them differently or show a generic error message
-                    alert(`Error signing in: ${error.message}`);
+                    this.showSnackbar(`Error signing in: ${error.message}`, 'red');
                 }
             }
         },
@@ -324,16 +309,16 @@ export default {
             console.log(this.email)
             if (!this.isValidEmail(this.email)) {
                 console.error("Invalid email format.");
-                alert("Invalid email format. Please enter a valid email address to reset your password.");
+                this.showSnackbar("Invalid email format. Please enter a valid email address to reset your password.", 'red');
                 return;
             }
 
             try {
                 await firebase.auth().sendPasswordResetEmail(this.email);
-                alert("Password reset email sent. Please check your inbox.");
+                this.showSnackbar("Password reset email sent. Please check your inbox.", 'blue');
             } catch (error) {
                 console.error("Error sending password reset email:", error.message);
-                alert(`Error sending password reset email: ${error.message}`);
+                this.showSnackbar(`Error sending password reset email: ${error.message}`, 'red');
             }
         },
 
