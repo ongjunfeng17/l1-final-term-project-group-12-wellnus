@@ -91,13 +91,7 @@
                             </v-col>
                           </v-row>
                           <br />
-                          <v-btn
-                            color="blue"
-                            dark
-                            block
-                            tile
-                            @click="signIn"
-                            class="mb-12"
+                          <v-btn id="btn" @click="signIn" class="mb-12 w-full"
                             >Log in</v-btn
                           >
 
@@ -138,9 +132,7 @@
                         <h6 class="text-center">Let's get you all set up!</h6>
                       </v-card-text>
                       <div class="text-center">
-                        <v-btn tile outlined dark @click="step++"
-                          >SIGN UP</v-btn
-                        >
+                        <v-btn id="btn" @click="step++">SIGN UP</v-btn>
                       </div>
                     </div>
                   </v-col>
@@ -176,7 +168,7 @@
                         </h6>
                       </v-card-text>
                       <div class="text-center">
-                        <v-btn tile outlined dark @click="step--">Log in</v-btn>
+                        <v-btn id="btn" @click="step--">Log in</v-btn>
                       </div>
                     </div>
                   </v-col>
@@ -266,13 +258,7 @@
                               <br />
                             </v-col>
                           </v-row>
-                          <v-btn
-                            color="blue"
-                            dark
-                            block
-                            tile
-                            @click="signUp"
-                            class="mb-12"
+                          <v-btn id="btn" @click="signUp" class="mb-12 w-full"
                             >Sign up</v-btn
                           >
 
