@@ -3,7 +3,7 @@ import AddBookingPatient from "@/components/AddBookingPatient.vue";
 import AddBookingDoctor from "@/components/AddBookingDoctor.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import { getUserRole } from "../queries.js"
+import { getUserRole } from "../queries.js";
 
 //import { ref } from "vue";
 
@@ -25,7 +25,7 @@ export default {
     return {
       refreshComp: 0,
       user: null,
-      userRole: "hello"
+      userRole: "hello",
     };
   },
   methods: {
@@ -40,7 +40,7 @@ export default {
       this.user = user;
       const userRole = await getUserRole(user.uid);
       this.userRole = userRole;
-    }
+    },
   },
 
   created() {
@@ -53,21 +53,22 @@ export default {
       }
     });
     */
-    
   },
 };
 </script>
 
 <template>
-  <div v-if="user">
-    <v-container v-if="userRole === 'patient'">
+  <v-container>
+    <div v-if="userRole === 'patient'">
       <AddBookingPatient />
-    </v-container>
-
-    <v-container v-else-if="userRole === 'doctor'">
+    </div>
+    <div v-else-if="userRole === 'doctor'">
       <AddBookingDoctor />
-    </v-container>
-  </div>
+    </div>
+    <div v-else>
+      You don't seem to be logged in! Redirecting you to the login page...
+    </div>
+  </v-container>
 </template>
 
 <style scoped></style>
