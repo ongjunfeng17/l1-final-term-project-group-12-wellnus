@@ -92,14 +92,4 @@ export default {
   </div>
 </template>
 
-<style scoped>
-#btn {
-  text-align: center;
-  margin: auto;
-  background-color: rgb(0, 61, 124);
-  color: white;
-}
-#btn:hover {
-  background-color: rgb(239, 124, 0);
-}
-</style>
+<style scoped></style>
