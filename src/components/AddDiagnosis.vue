@@ -2,6 +2,7 @@
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getUserIdByEmail } from "../queries.js";
 
@@ -10,17 +11,29 @@ const db = getFirestore(firebaseApp);
 export default {
   data() {
     return {
-      minDate: new Date().toISOString().split("T")[0], // Today's date in YYYY-MM-DD format
-      user: null,
-      selectedDate: "2024-04-24", // Initialize with today's date
-      selectedTime: "11:00",
-      dateOptions: [],
+      selectedDate: "", // Initialize with today's date
+      selectedTime: "",
       reasonForVisit: "", // Store the reason for the visit
       email: "",
-      teleconsult: "Yes",
-      needMC: "Yes",
-      enableOptionalField: false
+      teleconsult: "",
+      needMC: "",
+      giveMC: true,
+      daysMC: 1,
+      diagnosis: ""
     };
+  },
+
+  props: {
+    appointmentId: {
+      type: String
+    }
+  },
+
+  watch: {
+    // Watch for changes in give MC
+    giveMC() {
+      this.daysMC = 0; // Reset MC to 0 when giveMC is toggled
+    },
   },
 
   mounted() {
@@ -30,14 +43,38 @@ export default {
         this.user = user;
       }
     });
+    this.initialize();
   },
   
   methods: {
+    async initialize() {
+      const appointmentId = this.$route.query.appointmentId;
+      const docRef = doc(db, "appointments", appointmentId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const docData = docSnap.data();
+        this.selectedDate = docData["date"];
+        this.selectedTime = docData["time"];
+        this.reasonForVisit = docData["reasonForVisit"];
+        this.email = docData["email"];
+        this.teleconsult = docData["teleconsult"];
+        this.needMC = docData["needMC"];
+      }
+    },
+
     async savetofs() {
       // Get the user input information from the form
-      const { selectedTime, teleconsult, needMC, reasonForVisit, email, user } =
+      const { 
+        selectedDate,
+        selectedTime,
+        reasonForVisit,
+        email,
+        teleconsult,
+        needMC,
+        giveMC,
+        daysMC,
+        diagnosis } =
         this;
-      const selectedDate = this.selectedDate.split(" ")[0];
 
       if (
         !selectedDate ||
@@ -47,35 +84,25 @@ export default {
         !reasonForVisit ||
         !email
       ) {
-        alert("Please fill up all fields in the form");
+        alert("Invalid appointment");
         return;
       }
 
-      const patientId = await getUserIdByEmail(email);
-      if (patientId === "") {
-        alert("You have entered an invalid patient email, please try again.");
+      if (!diagnosis) {
+        alert("You need to fill in a valid diagnosis");
         return;
       }
 
-      alert("Booking appointment...");
-
-      try {
-        const docRef = await addDoc(collection(db, "appointments"), {
-          patientId: patientId, // Include user ID
-          email: email,
-          date: selectedDate,
-          time: selectedTime,
-          teleconsult,
-          needMC,
-          reasonForVisit,
-          timestamp: new Date(`${selectedDate}T${selectedTime}`).getTime(),
-        });
-        console.log("Document written with ID: ", docRef.id);
-        alert("Appointment booked successfully!");
-      } catch (error) {
-        console.error("Error adding document: ", error);
-        alert("Failed to book appointment. Please try again.");
+      if (giveMC && daysMC == 0) {
+        alert("days MC cannot be 0 if giving MC");
       }
+
+      // TODO:
+      // Follow up work such as saving the diagnosis to the database
+      // Sending the MC to relevant emails
+      // Dummy alert below to show that it has passed above checks:
+      const appointmentId = this.$route.query.appointmentId;
+      alert("Successfully attended to appointment " + appointmentId);
     },
   },
 };
@@ -130,10 +157,11 @@ export default {
                   readonly
                 />
 
-                <v-text-field
+                <v-textarea
                   v-model="reasonForVisit"
                   label="Reason for Visit"
                   color="blue"
+                  rows="3"
                   readonly
                 />
 
@@ -142,7 +170,7 @@ export default {
                 </v-card-title>
 
                 <v-textarea
-                  v-model="longDescription"
+                  v-model="diagnosis"
                   label="Diagnosis"
                   outlined
                   multiline
@@ -153,22 +181,33 @@ export default {
                 />
 
                 <v-checkbox 
-                  v-model="enableOptionalField" 
+                  v-model="giveMC" 
                   label="Give MC" 
                   false-icon="$checkboxBlank"
                   true-icon="$checkboxMarked"
                 ></v-checkbox>
 
-                <v-text-field
-                  v-model="optionalFieldValue"
-                  :disabled="!enableOptionalField"
-                  label="Number of Days of MC"
+                <v-select
+                  v-model="daysMC"
+                  :disabled="!giveMC"
+                  :items="[1,2,3,4,5]"
+                  label="Days of MC"
+                  required
                   outlined
                   dense
-                  color="blue"
-                  autocomplete="false"
                   class="mt-1"
-                />
+                  color="blue"
+                >
+                  <template v-slot:prepend-item>
+                    <v-list-item>
+                      <v-list-item-content>
+                        <v-list-item-title
+                          >Select your option</v-list-item-title
+                        >
+                      </v-list-item-content>
+                    </v-list-item>
+                  </template>
+                </v-select>
 
               </v-col>
             </v-row>
