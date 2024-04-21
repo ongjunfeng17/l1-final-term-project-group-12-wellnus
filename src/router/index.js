@@ -23,6 +23,7 @@ const routes = [
     path: "/diagnosis",
     name: "DiagnosisForm",
     component: DiagnosisForm,
+    props: true,
   }
 ];
 

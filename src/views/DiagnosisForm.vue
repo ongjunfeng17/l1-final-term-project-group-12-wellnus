@@ -1,22 +1,13 @@
 <script>
-import AddBookingDoctor from "@/components/AddBookingDoctor.vue";
+import AddDiagnosis from "@/components/AddDiagnosis.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getUserRole } from "../queries.js";
 
-//import { ref } from "vue";
-
 export default {
-  name: "Form",
+  name: "DiagnosisForm",
   components: {
-    AddBookingDoctor,
+    AddDiagnosis,
   },
-
-  /*
-  setup() {
-    const userRole = ref("doctor");
-    return { userRole }; // make `userRole` accessible in the template
-  },
-  */
 
   data() {
     return {
@@ -43,23 +34,18 @@ export default {
   created() {
     const auth = getAuth();
     onAuthStateChanged(auth, this.userSetup);
-    /*
-    (user) => {
-      if (user) {
-        this.user = user;
-      }
-    });
-    */
   },
 };
 </script>
 
 <template>
+  
   <v-container>
     <div v-if="userRole === 'patient'">
     </div>
     <div v-else-if="userRole === 'doctor'">
-      <AddBookingDoctor />
+      <h1>{{ this.$route.query.appointmentId }}</h1>
+      <AddDiagnosis />
     </div>
     <div v-else>
       You don't seem to be logged in! Redirecting you to the login page...

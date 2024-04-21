@@ -76,7 +76,7 @@ export default {
         // using appointment id to delete appointment
         //alert("You are going to attend to user " + id);
         console.log(id);
-        router.push({path: "diagnosis"});
+        router.push({path: "/diagnosis", query: {appointmentId: id}});
     },
   },
 };
