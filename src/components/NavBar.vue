@@ -78,7 +78,7 @@ export default {
 
               <v-list>
                 <v-list-item>
-                  <v-btn class="hover:bg-red">
+                  <v-btn class="hover:bg-red" id="btn">
                     <router-link to="profile"> Profile </router-link>
                   </v-btn>
                 </v-list-item>
@@ -92,4 +92,4 @@ export default {
   </div>
 </template>
 
-<style></style>
+<style scoped></style>

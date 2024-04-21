@@ -22,26 +22,17 @@ export default {
   methods: {
     signOut() {
       const auth = getAuth();
-      signOut(auth).then(() => {
-        this.$emit('logout');
-        this.$router.push({ name: "Login" });
-      }).catch((error) => {
-        console.error("Logout Failed", error);
-      });
+      signOut(auth)
+        .then(() => {
+          this.$emit("logout");
+          this.$router.push({ name: "Login" });
+        })
+        .catch((error) => {
+          console.error("Logout Failed", error);
+        });
     },
   },
 };
 </script>
 
-<style scoped>
-#btn {
-  text-align: center;
-  margin: auto;
-  background-color: rgb(68, 127, 204);
-  color: white;
-}
-#btn:hover {
-  background-color: rgb(100, 98, 97);
-  box-shadow: 3px 3px grey;
-}
-</style>
+<style scoped></style>
