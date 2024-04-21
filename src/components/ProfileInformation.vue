@@ -29,7 +29,9 @@
           <tr>
             <td> Gender </td>
             <td v-if="!state.editing">{{ state.gender }}</td>
-            <td v-else> <input type="text" v-model="state.gender" class="input-outline"> </td>   
+            <td v-else> <input type="text" v-model="state.gender" class="input-outline"> 
+              <v-select v-model="state.gender":items="['Female', 'Male']" class="input-outline"></v-select>
+            </td>   
           </tr>
 
           <tr>
@@ -174,12 +176,15 @@
     
       </v-table>
     </v-card>
+    <br>
+    <v-btn color="error" v-on:click="deleteAccount" class="btn-right">Delete Account</v-btn>
     
     
   </form>
 </template>
 <script setup>
   import { reactive, onMounted } from "vue";
+  import { useRouter } from 'vue-router'; 
   import { useVuelidate } from "@vuelidate/core";
   import { email, required } from "@vuelidate/validators";
   import { getAuth} from "firebase/auth";
@@ -187,7 +192,8 @@
   import firebaseApp from '../firebase.js';
   import { getFirestore } from 'firebase/firestore';
   import { getDoc, doc, updateDoc, setDoc} from 'firebase/firestore';
-  const db = getFirestore(firebaseApp)
+  const db = getFirestore(firebaseApp);
+  const router = useRouter(); 
 
 
   // call to db goes here, then populate fields with existing values
@@ -474,6 +480,30 @@
       state[key] = value;
     }
   }*/
+  async function deleteAccount() {
+  if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+    try {
+      // Mark the user as inactive in the database
+      const userDocRef = doc(db, "users", state.user.uid);
+      await updateDoc(userDocRef, {
+        isActive: false
+      });
+
+      // Log out the user
+      const auth = getAuth();
+      await auth.signOut();
+
+      // Redirect to login page
+      router.push({ name: "Login" });
+      alert("Account deleted successfully.");
+
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      alert("Failed to delete account. Please try again.");
+    }
+  }
+}
+
 </script>
 
 <style>
