@@ -95,6 +95,7 @@ export default {
 
       if (giveMC && daysMC == 0) {
         alert("days MC cannot be 0 if giving MC");
+        return;
       }
 
       // TODO:
