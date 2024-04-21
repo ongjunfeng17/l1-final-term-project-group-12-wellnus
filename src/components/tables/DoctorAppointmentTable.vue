@@ -6,7 +6,7 @@
   >
     <template v-slot:item.actions="{ item }">
       <v-icon size="small" @click="attendTo(item.id)" color="black">
-        $delete
+        $clipboard
       </v-icon>
     </template>
   </v-data-table>
