@@ -301,7 +301,7 @@ export default {
           </v-card-text>
           <v-row justify="center">
             <v-col cols="6" sm="4" class="mb-5">
-              <v-btn id="btn" dark tile @click="savetofs">Save</v-btn>
+              <v-btn id="btn" @click="savetofs">Save</v-btn>
             </v-col>
           </v-row>
         </v-card>
