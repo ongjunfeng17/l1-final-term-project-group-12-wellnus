@@ -24,7 +24,7 @@ export default {
     headers: [
       { title: "S/N", key: "sn",  align: "center" },
       { title: "Patient Email", key: "email", align: "center" },
-      { title: "Date (DD/MM/YY)", key: "date", align: "center" },
+      { title: "Date (YYYY/MM/DD)", key: "date", align: "center" },
       { title: "Time", key: "time", align: "center" },
       { title: "Teleconsult", key: "teleconsult", align: "center" },
       { title: "MC", key: "mc", align: "center" },
@@ -79,3 +79,4 @@ export default {
   },
 };
 </script>
+

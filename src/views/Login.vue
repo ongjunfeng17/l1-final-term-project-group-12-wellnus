@@ -314,16 +314,30 @@ export default {
   props: {
     source: String,
   },
+  
   created() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        // User is signed in, redirect them to the home page
+  firebase.auth().onAuthStateChanged(async (user) => {
+    if (user) {
+      // Fetch user data from Firestore to check if the account is active
+      const userRef = firebase.firestore().collection("users").doc(user.uid);
+      const doc = await userRef.get();
+
+      if (doc.exists && doc.data().isActive) {
+        // If the document exists and isActive is true, redirect to the appointments page
         this.$router.push("/appointments");
-        console.log("past user");
+        console.log("Past user with active account");
       } else {
+        // If the account is not active or the document does not exist, sign out the user
+        await firebase.auth().signOut();
+        this.showSnackbar("Your account has been deactivated. Please contact support.", "red");
+        console.log("Deactivated or non-existent user account");
       }
-    });
-  },
+    } else {
+      // No user is logged in or user has been signed out
+      console.log("No user logged in or user just signed out.");
+    }
+  });
+},
 
   methods: {
     showSnackbar(message, color = "red") {
@@ -367,6 +381,7 @@ export default {
           firstName: this.firstName,
           lastName: this.lastName,
           isDoctor: this.isDoctor,
+          isActive: true
           // Add any additional fields you need
         };
 
@@ -386,37 +401,43 @@ export default {
     },
 
     async signIn() {
-      this.email = this.email.trim();
-      if (!this.isValidEmail(this.email)) {
-        console.error("Invalid email format.");
-        this.showSnackbar("Invalid email format.", "red");
-        return;
-      }
-      const persistenceType = this.rememberMe
-        ? firebase.auth.Auth.Persistence.LOCAL
-        : firebase.auth.Auth.Persistence.SESSION;
+  this.email = this.email.trim();
+  if (!this.isValidEmail(this.email)) {
+    console.error("Invalid email format.");
+    this.showSnackbar("Invalid email format.", "red");
+    return;
+  }
 
-      try {
-        await firebase.auth().setPersistence(persistenceType);
-        const userCredential = await firebase
-          .auth()
-          .signInWithEmailAndPassword(this.email, this.password);
-        // Redirect to '/appointments' or handle the login success scenario
-        this.$router.push("/appointments");
-      } catch (error) {
-        console.error("Error signing in:", error.message);
-        // Check if the error code is for a wrong password
-        if (error.code === "auth/invalid-credential") {
-          this.showSnackbar(
-            "The password you entered is incorrect. Please try again.",
-            "red"
-          );
-        } else {
-          // For other types of errors, you might want to handle them differently or show a generic error message
-          this.showSnackbar(`Error signing in: ${error.message}`, "red");
-        }
-      }
-    },
+  const persistenceType = this.rememberMe
+    ? firebase.auth.Auth.Persistence.LOCAL
+    : firebase.auth.Auth.Persistence.SESSION;
+
+  try {
+    await firebase.auth().setPersistence(persistenceType);
+    const userCredential = await firebase.auth().signInWithEmailAndPassword(this.email, this.password);
+
+    // Fetch user data from Firestore to check if the account is active
+    const userRef = firebase.firestore().collection("users").doc(userCredential.user.uid);
+    const doc = await userRef.get();
+
+    if (!doc.exists || !doc.data().isActive) {
+      // If the document doesn't exist or isActive is false, sign out the user and show an error
+      await firebase.auth().signOut(); // Sign out the user
+      this.showSnackbar("This account has been deactivated. Please contact support.", "red");
+      return; // Stop further execution
+    }
+
+    // If all checks pass, proceed to the appointments page
+    this.$router.push("/appointments");
+  } catch (error) {
+    console.error("Error signing in:", error);
+    if (error.code === "auth/wrong-password" || error.code === "auth/user-not-found") {
+      this.showSnackbar("Incorrect credentials, please try again.", "red");
+    } else {
+      this.showSnackbar(`Error during sign in: ${error.message}`, "red");
+    }
+  }
+},
 
     async resetPassword() {
       this.email = this.email.trim();

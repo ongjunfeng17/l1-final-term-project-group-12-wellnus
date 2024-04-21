@@ -61,9 +61,9 @@ export default {
           <v-col cols="8" class="">
             <v-row>
               <v-col>
-                <router-link to="appointments"> Appointments </router-link>
+                <router-link to="appointments" class="nav-link"> Appointments </router-link>
               </v-col>
-              <v-col> <router-link to="form"> Form </router-link></v-col>
+              <v-col> <router-link to="form" class="nav-link"> Form </router-link></v-col>
             </v-row>
           </v-col>
           <v-col cols="2">
@@ -92,4 +92,30 @@ export default {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.router-link-active {
+  color: rgb(23, 60, 124) !important;
+  position: relative; 
+}
+
+.router-link-active::after {
+  content: '';
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 2px; 
+  background-color: rgb(23, 60, 124); 
+  bottom: 0px; 
+  left: 0;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: rgb(23, 60, 124); 
+  padding: 10px 15px; 
+  display: inline-block; 
+}
+
+</style>
+
+
