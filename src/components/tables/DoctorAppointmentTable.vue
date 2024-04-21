@@ -6,7 +6,7 @@
   >
     <template v-slot:item.actions="{ item }">
       <v-icon size="small" @click="attendTo(item.id)" color="black">
-        $delete
+        $clipboard
       </v-icon>
     </template>
   </v-data-table>
@@ -15,6 +15,7 @@
 <script>
 import firebaseApp from "../../firebase.js";
 import { getDocs, getFirestore, collection, query, where } from "firebase/firestore";
+import router from "../../router/index.js";
 const db = getFirestore(firebaseApp);
 
 export default {
@@ -54,7 +55,6 @@ export default {
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
         const docData = doc.data();
-        console.log(doc.id);
         const docObj = {
           
           /* Added a new field doc.id (appointment id) 
@@ -72,9 +72,11 @@ export default {
         counter++;
       });
     },
-    async attendTo(id) { 
+    attendTo(id) { 
         // using appointment id to delete appointment
-        alert("You are going to attend to user " + id);
+        //alert("You are going to attend to user " + id);
+        console.log(id);
+        router.push({path: "/diagnosis", query: {appointmentId: id}});
     },
   },
 };
