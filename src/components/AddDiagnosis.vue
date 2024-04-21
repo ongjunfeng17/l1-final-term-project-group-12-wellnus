@@ -13,87 +13,16 @@ export default {
       minDate: new Date().toISOString().split("T")[0], // Today's date in YYYY-MM-DD format
       user: null,
       selectedDate: "2024-04-24", // Initialize with today's date
-      selectedTime: null,
+      selectedTime: "11:00",
       dateOptions: [],
       reasonForVisit: "", // Store the reason for the visit
       email: "",
-      teleconsult: null,
-      needMC: null,
+      teleconsult: "Yes",
+      needMC: "Yes",
       enableOptionalField: false
     };
   },
-  computed: {
-    timeOptions() {
-      const options = [];
-      const dayOfWeek = new Date(this.selectedDate).getDay();
-      let timeRanges = [];
 
-      if ([1, 2, 3].includes(dayOfWeek)) {
-        // Monday, Tuesday, Wednesday
-        timeRanges = [
-          { start: "08:30", end: "11:30" },
-          { start: "13:30", end: "17:00" },
-        ];
-      } else if (dayOfWeek === 4) {
-        // Thursday
-        timeRanges = [
-          { start: "08:30", end: "11:30" },
-          { start: "13:30", end: "16:00" },
-        ];
-      } else if (dayOfWeek === 5) {
-        // Friday
-        timeRanges = [
-          { start: "08:30", end: "11:30" },
-          { start: "13:30", end: "16:30" },
-        ];
-      }
-
-      const now = new Date();
-      const currentDate = now.toISOString().split("T")[0];
-
-      timeRanges.forEach((range) => {
-        const [startHour, startMinute] = range.start.split(":").map(Number);
-        const [endHour, endMinute] = range.end.split(":").map(Number);
-        let currentHour = startHour;
-        let currentMinute = startMinute;
-
-        while (
-          currentHour < endHour ||
-          (currentHour === endHour && currentMinute <= endMinute)
-        ) {
-          const time = `${currentHour
-            .toString()
-            .padStart(2, "0")}:${currentMinute.toString().padStart(2, "0")}`;
-
-          // Only add time if it's at least one hour after the current time when selectedDate is today
-          if (
-            this.selectedDate !== currentDate ||
-            new Date(`${this.selectedDate}T${time}:00`).getTime() >
-              now.getTime() + 3600000
-          ) {
-            options.push(time);
-          }
-
-          // console.log(currentHour)
-
-          currentMinute += 30;
-          if (currentMinute >= 60) {
-            currentHour += 1;
-            currentMinute = 0;
-          }
-        }
-      });
-
-      return options;
-    },
-  },
-
-  watch: {
-    // Watch for changes in the date selection to update the min time accordingly
-    selectedDate() {
-      this.$forceUpdate(); // Force update to refresh timeOptions based on the new selectedDate
-    },
-  },
   mounted() {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
@@ -101,44 +30,9 @@ export default {
         this.user = user;
       }
     });
-
-    this.generateDateOptions();
   },
+  
   methods: {
-    generateDateOptions() {
-      const dates = [];
-      const today = new Date();
-      const timeZoneOffset = 8 * 60 * 60 * 1000; // 8 hours in milliseconds
-      const weekDays = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ];
-
-      for (let i = 1; i <= 7; i++) {
-        const date = new Date(
-          today.getFullYear(),
-          today.getMonth(),
-          today.getDate() + i
-        );
-        const sgtDate = new Date(date.getTime() + timeZoneOffset); // Adjust to Singapore Time Zone
-        const dayName = weekDays[sgtDate.getDay()];
-
-        //console.log(sgtDate.getDay() + " " + sgtDate)
-        if (sgtDate.getDay() !== 0 && sgtDate.getDay() !== 6) {
-          // Exclude Sundays (0) and Saturdays (6)
-          dates.push(
-            sgtDate.toISOString().split("T")[0] + " (" + dayName + ")"
-          );
-        }
-      }
-      this.dateOptions = dates;
-    },
-
     async savetofs() {
       // Get the user input information from the form
       const { selectedTime, teleconsult, needMC, reasonForVisit, email, user } =
@@ -196,102 +90,79 @@ export default {
           <v-card-text class="pa-1">
             <v-row align="center" justify="center">
               <v-col cols="12" sm="8">
-                <v-select
+
+                <v-card-text class="section-title">
+                  Appointment Details
+                </v-card-text>
+
+                <v-text-field
                   v-model="selectedDate"
-                  :items="dateOptions"
                   label="Appointment Date"
-                  required
-                  outlined
-                  dense
-                  class="mt-1"
                   color="blue"
                   readonly
-                >
-                  <template v-slot:prepend-item>
-                    <v-list-item>
-                      <v-list-item-content>
-                        <v-list-item-title>Select a date</v-list-item-title>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </template>
-                </v-select>
+                />
 
-                <v-select
+                <v-text-field
                   v-model="selectedTime"
-                  :items="timeOptions"
                   label="Appointment Time"
-                  required
-                  outlined
-                  dense
-                  class="mt-1"
                   color="blue"
-                >
-                  <template v-slot:prepend-item>
-                    <v-list-item>
-                      <v-list-item-content>
-                        <v-list-item-title
-                          >Select your option</v-list-item-title
-                        >
-                      </v-list-item-content>
-                    </v-list-item>
-                  </template>
-                </v-select>
+                  readonly
+                />
 
-                <v-select
+                <v-text-field
                   v-model="teleconsult"
-                  :items="['Yes', 'No']"
                   label="Teleconsult"
-                  required
-                  outlined
-                  dense
-                  class="mt-1"
                   color="blue"
-                >
-                  <template v-slot:prepend-item>
-                    <v-list-item>
-                      <v-list-item-content>
-                        <v-list-item-title
-                          >Select your option</v-list-item-title
-                        >
-                      </v-list-item-content>
-                    </v-list-item>
-                  </template>
-                </v-select>
+                  readonly
+                />
 
-                <v-select
+                <v-text-field
                   v-model="needMC"
-                  :items="['Yes', 'No']"
-                  label="MC"
-                  required
-                  outlined
-                  dense
-                  class="mt-1"
+                  label="MC Request"
                   color="blue"
-                >
-                  <template v-slot:prepend-item>
-                    <v-list-item>
-                      <v-list-item-content>
-                        <v-list-item-title
-                          >Select your option</v-list-item-title
-                        >
-                      </v-list-item-content>
-                    </v-list-item>
-                  </template>
-                </v-select>
+                  readonly
+                />
 
                 <v-text-field
                   v-model="email"
                   label="Patient Email"
-                  outlined
-                  dense
                   color="blue"
-                  autocomplete="false"
-                  class="mt-1"
+                  readonly
                 />
 
                 <v-text-field
                   v-model="reasonForVisit"
                   label="Reason for Visit"
+                  color="blue"
+                  readonly
+                />
+
+                <v-card-title class="section-title">
+                  Doctor's Section
+                </v-card-title>
+
+                <v-textarea
+                  v-model="longDescription"
+                  label="Diagnosis"
+                  outlined
+                  multiline
+                  rows="5"
+                  color="blue"
+                  autocomplete="false"
+                  class="mt-1"
+                />
+
+                <v-checkbox 
+                  v-model="enableOptionalField" 
+                  label="Give MC" 
+                  false-icon="$checkboxBlank"
+                  true-icon="$checkboxMarked"
+                ></v-checkbox>
+
+                <v-text-field
+                  v-model="optionalFieldValue"
+                  :disabled="!enableOptionalField"
+                  label="Number of Days of MC"
                   outlined
                   dense
                   color="blue"
@@ -299,17 +170,6 @@ export default {
                   class="mt-1"
                 />
 
-                <v-checkbox v-model="enableOptionalField" label="Optional Field"></v-checkbox>
-                <v-text-field
-                  v-model="optionalFieldValue"
-                  :disabled="!enableOptionalField"
-                  label="Optional Text Field"
-                  outlined
-                  dense
-                  color="blue"
-                  autocomplete="false"
-                  class="mt-1"
-                />
               </v-col>
             </v-row>
           </v-card-text>
@@ -342,5 +202,14 @@ export default {
   color: inherit;
   /* Keeps the color unchanged on hover */
   cursor: pointer;
+}
+
+.pt-5 {
+  font-size: 25px;
+}
+
+.section-title {
+  font-size: 17px;
+  color: rgb(23, 60, 124);
 }
 </style>
