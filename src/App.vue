@@ -14,7 +14,7 @@ export default {
     <NavBar />
     <v-container fluid class="pa-0 h-full align-center justify-center">
       <v-container class="h-full d-flex justify-center align-center"
-        ><router-view
+        ><router-view class="w-full"
       /></v-container>
     </v-container>
   </v-app>

@@ -51,7 +51,7 @@ export default {
 </script>
 
 <template>
-  <div v-if="user" class="w-full align-self-start">
+  <div v-if="user" class="align-self-start">
     <v-container v-if="userRole === 'patient'">
       <h1>Upcoming Appointments</h1>
       <br />
