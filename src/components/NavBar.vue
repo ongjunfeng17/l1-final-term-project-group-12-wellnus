@@ -61,9 +61,15 @@ export default {
           <v-col cols="8" class="">
             <v-row>
               <v-col>
-                <router-link to="appointments" class="nav-link"> Appointments </router-link>
+                <router-link to="appointments" class="nav-link">
+                  Appointments
+                </router-link>
               </v-col>
-              <v-col> <router-link to="form" class="nav-link"> Form </router-link></v-col>
+              <v-col>
+                <router-link to="form" class="nav-link">
+                  Form
+                </router-link></v-col
+              >
             </v-row>
           </v-col>
           <v-col cols="2">
@@ -78,8 +84,8 @@ export default {
 
               <v-list>
                 <v-list-item>
-                  <v-btn class="hover:bg-red" id="btn">
-                    <router-link to="profile"> Profile </router-link>
+                  <v-btn class="hover:bg-red" id="btn" to="/profile">
+                    Profile
                   </v-btn>
                 </v-list-item>
                 <v-list-item><LogOut @logout="handleLogout" /></v-list-item>
@@ -95,27 +101,24 @@ export default {
 <style scoped>
 .router-link-active {
   color: rgb(23, 60, 124) !important;
-  position: relative; 
+  position: relative;
 }
 
 .router-link-active::after {
-  content: '';
+  content: "";
   position: absolute;
   display: block;
   width: 100%;
-  height: 2px; 
-  background-color: rgb(23, 60, 124); 
-  bottom: 0px; 
+  height: 2px;
+  background-color: rgb(23, 60, 124);
+  bottom: 0px;
   left: 0;
 }
 
 .nav-link {
   text-decoration: none;
-  color: rgb(23, 60, 124); 
-  padding: 10px 15px; 
-  display: inline-block; 
+  color: rgb(23, 60, 124);
+  padding: 10px 15px;
+  display: inline-block;
 }
-
 </style>
-
-
