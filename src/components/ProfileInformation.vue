@@ -122,7 +122,10 @@
           <tr>
             <td> Monday </td>
             <td> 
-              <span v-for="item in state.Mon" :key="item"> {{item }} <br/></span>
+              <span v-for="(item,index) in state.Mon" :key="index"> {{item }} 
+                <span @click="() => deleteEmail('mon', index)"> X</span>
+                <br/>
+              </span>
               
             </td>
             <td v-if="!state.monAdd" v-on:click="() => {addEmail('mon')}" class="add"> + Add</td>
@@ -132,7 +135,10 @@
           <tr>
             <td> Tuesday </td>
             <td>
-              <span v-for="item in state.Tue" :key="item"> {{item }}<br/></span>
+              <span v-for="(item, index) in state.Tue" :key="index"> {{item }}
+                <span @click="() => deleteEmail('tue', index)"> X</span>
+                <br/>
+              </span>
               
             </td>
             <td v-if="!state.tueAdd" v-on:click="() => {addEmail('tue')}" class="add"> + Add</td>
@@ -142,7 +148,9 @@
           <tr>
             <td> Wednesday </td>
             <td>
-              <span v-for="item in state.Wed" :key="item"> {{item }} <br/></span>
+              <span v-for="(item, index) in state.Wed" :key="index"> {{item }} 
+                <span @click="() => deleteEmail('wed', index)"> X</span>
+                <br/></span>
               
             </td>
             <td v-if="!state.wedAdd" v-on:click="() => {addEmail('wed')}" class="add"> + Add</td>
@@ -153,7 +161,9 @@
           <tr>
             <td> Thursday </td>
             <td>
-              <span v-for="item in state.Thu" :key="item"> {{item }} <br/></span>
+              <span v-for="(item, index) in state.Thu" :key="index"> {{item }} 
+                <span @click="() => deleteEmail('thu', index)"> X</span>
+                <br/></span>
               
             </td>
             <td v-if="!state.thuAdd" v-on:click="() => {addEmail('thu')}" class="add"> + Add</td>
@@ -164,7 +174,9 @@
           <tr>
             <td> Friday </td>
             <td> 
-              <span v-for="item in state.Fri" :key="item"> {{item }} <br/></span>
+              <span v-for="(item, index) in state.Fri" :key="index"> {{item }} 
+                <span @click="() => deleteEmail('fri', index)"> X</span>
+                <br/></span>
               
             </td>
             <td v-if="!state.friAdd" v-on:click="() => {addEmail('fri')}" class="add"> + Add</td>
@@ -354,6 +366,43 @@
     
 
   }
+
+  async function deleteEmail(day, index) {
+    const mcDoc = doc(db, "medicalcertificates", state.user.uid);
+    const mcSnapshot = await getDoc(mcDoc)
+    if (day === "mon") {
+        state.Mon.splice(index, 1);
+        await updateDoc(mcDoc, {
+          Mon: state.Mon
+        })
+        console.log("success")
+        
+    } else if (day === "tue") {
+        state.Tue.splice(index, 1);
+        await updateDoc(mcDoc, {
+          Tue: state.Tue
+        })
+        console.log("success")
+    } else if (day === "wed") {
+        state.Wed.splice(index, 1);
+        await updateDoc(mcDoc, {
+          Wed: state.Wed
+        })
+        console.log("success")
+    } else if (day === "thu") {
+        state.Thu.splice(index, 1);
+        await updateDoc(mcDoc, {
+          Thu: state.Thu
+        })
+        console.log("success")
+    } else if (day === "fri") {
+        state.Fri.splice(index, 1);
+        await updateDoc(mcDoc, {
+          Fri: state.Fri
+        })
+        console.log("success")
+    }
+}
 
   async function doneEdit() {
     if (state.editing) {
