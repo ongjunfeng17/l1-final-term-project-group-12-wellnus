@@ -22,13 +22,13 @@ export default {
     dialog: false,
     dialogDelete: false,
     headers: [
-      { title: "S/N", key: "sn",  align: "center" },
-      { title: "Patient Email", key: "email", align: "center" },
-      { title: "Date (DD/MM/YY)", key: "date", align: "center" },
-      { title: "Time", key: "time", align: "center" },
-      { title: "Teleconsult", key: "teleconsult", align: "center" },
-      { title: "MC", key: "mc", align: "center" },
-      { title: "Actions", key: "actions", sortable: false, align: "center" }
+      { title: "S/N", key: "sn",  align: "center", width: "5px" },
+      { title: "Patient Email", key: "email", align: "center", width: "200px" },
+      { title: "Date (YYYY/MM/DD)", key: "date", align: "center", width: "150px" },
+      { title: "Time", key: "time", align: "center", width: "150px" },
+      { title: "Teleconsult", key: "teleconsult", align: "center", width: "150px" },
+      { title: "MC", key: "mc", align: "center", width: "150px" },
+      { title: "Actions", key: "actions", sortable: false, align: "center", width: "5px" }
     ],
     data: [],
   }),
