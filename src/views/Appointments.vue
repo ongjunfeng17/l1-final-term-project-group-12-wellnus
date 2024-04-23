@@ -51,7 +51,7 @@ export default {
 </script>
 
 <template>
-  <div v-if="user" class="align-self-start">
+  <v-card v-if="user" class="align-self-start">
     <v-container v-if="userRole === 'patient'">
       <h1>Upcoming Appointments</h1>
       <br />
@@ -69,7 +69,7 @@ export default {
       <br />
       <PatientPastApptTable :user="user" />
     </v-container>
-  </div>
+  </v-card>
 </template>
 
 <style></style>
