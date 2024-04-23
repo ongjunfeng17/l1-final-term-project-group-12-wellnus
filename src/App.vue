@@ -11,9 +11,17 @@ export default {
 
 <template>
   <v-app>
-    <v-container fluid class="pa-0">
-      <NavBar />
-      <v-container><router-view /></v-container>
+    <NavBar />
+    <v-container fluid class="pa-0 h-full align-center justify-center">
+
+      <div id="background"></div>
+      <v-container
+        class="h-full d-flex justify-center align-center"
+        id="content"
+
+
+        ><router-view class="w-full"
+      /></v-container>
     </v-container>
   </v-app>
 </template>
@@ -26,4 +34,38 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+
+#btn {
+  text-align: center;
+  margin: auto;
+  background-color: rgb(0, 61, 124);
+  color: white;
+}
+#btn:hover {
+  background-color: rgb(239, 124, 0);
+}
+
+
+#background {
+  background: linear-gradient(-45deg, #ef7c00, #e73c7e, #0037dc, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 20s ease infinite;
+  opacity: 20%;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 </style>

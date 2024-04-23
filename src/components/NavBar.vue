@@ -32,7 +32,7 @@ export default {
       // Handle logout (e.g., update UI, clear data)
       console.log("Logged out!");
       this.user = null; // Update user state
-    }
+    },
   },
 };
 </script>
@@ -41,7 +41,7 @@ export default {
   <div id="logged" v-if="user">
     <div class="sticky top-0 z-10 w-full shadow-xl">
       <v-container .align-center .justify-center fluid class="p-8">
-        <v-row align-center justify-center fluid>
+        <v-row fluid class="d-flex justify-center align-center">
           <v-row cols="2" dense
             ><v-col
               ><v-img
@@ -61,9 +61,15 @@ export default {
           <v-col cols="8" class="">
             <v-row>
               <v-col>
-                <router-link to="appointments"> Appointments </router-link>
+                <router-link to="appointments" class="nav-link">
+                  Appointments
+                </router-link>
               </v-col>
-              <v-col> <router-link to="form"> Form </router-link></v-col>
+              <v-col>
+                <router-link to="form" class="nav-link">
+                  Form
+                </router-link></v-col
+              >
             </v-row>
           </v-col>
           <v-col cols="2">
@@ -75,14 +81,15 @@ export default {
                   v-bind="props"
                 />
               </template>
-              
+
               <v-list>
                 <v-list-item>
-                  <router-link to="profile"> Profile Information </router-link>
+                  <v-btn class="hover:bg-red" id="btn" to="/profile">
+                    Profile
+                  </v-btn>
                 </v-list-item>
-                <v-list-item><LogOut @logout="handleLogout"/></v-list-item>
+                <v-list-item><LogOut @logout="handleLogout" /></v-list-item>
               </v-list>
-              
             </v-menu>
           </v-col>
         </v-row>
@@ -91,4 +98,27 @@ export default {
   </div>
 </template>
 
-<style></style>
+<style scoped>
+.router-link-active {
+  color: rgb(23, 60, 124) !important;
+  position: relative;
+}
+
+.router-link-active::after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: rgb(23, 60, 124);
+  bottom: 0px;
+  left: 0;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: rgb(23, 60, 124);
+  padding: 10px 15px;
+  display: inline-block;
+}
+</style>

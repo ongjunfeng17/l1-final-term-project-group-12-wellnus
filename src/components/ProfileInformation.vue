@@ -29,7 +29,9 @@
           <tr>
             <td> Gender </td>
             <td v-if="!state.editing">{{ state.gender }}</td>
-            <td v-else> <input type="text" v-model="state.gender" class="input-outline"> </td>   
+            <td v-else> <input type="text" v-model="state.gender" class="input-outline"> 
+              <v-select v-model="state.gender":items="['Female', 'Male']" class="input-outline"></v-select>
+            </td>   
           </tr>
 
           <tr>
@@ -120,7 +122,10 @@
           <tr>
             <td> Monday </td>
             <td> 
-              <span v-for="item in state.Mon" :key="item"> {{item }} <br/></span>
+              <span v-for="(item,index) in state.Mon" :key="index"> {{item }} 
+                <span @click="() => deleteEmail('mon', index)"> X</span>
+                <br/>
+              </span>
               
             </td>
             <td v-if="!state.monAdd" v-on:click="() => {addEmail('mon')}" class="add"> + Add</td>
@@ -130,7 +135,10 @@
           <tr>
             <td> Tuesday </td>
             <td>
-              <span v-for="item in state.Tue" :key="item"> {{item }}<br/></span>
+              <span v-for="(item, index) in state.Tue" :key="index"> {{item }}
+                <span @click="() => deleteEmail('tue', index)"> X</span>
+                <br/>
+              </span>
               
             </td>
             <td v-if="!state.tueAdd" v-on:click="() => {addEmail('tue')}" class="add"> + Add</td>
@@ -140,7 +148,9 @@
           <tr>
             <td> Wednesday </td>
             <td>
-              <span v-for="item in state.Wed" :key="item"> {{item }} <br/></span>
+              <span v-for="(item, index) in state.Wed" :key="index"> {{item }} 
+                <span @click="() => deleteEmail('wed', index)"> X</span>
+                <br/></span>
               
             </td>
             <td v-if="!state.wedAdd" v-on:click="() => {addEmail('wed')}" class="add"> + Add</td>
@@ -151,7 +161,9 @@
           <tr>
             <td> Thursday </td>
             <td>
-              <span v-for="item in state.Thu" :key="item"> {{item }} <br/></span>
+              <span v-for="(item, index) in state.Thu" :key="index"> {{item }} 
+                <span @click="() => deleteEmail('thu', index)"> X</span>
+                <br/></span>
               
             </td>
             <td v-if="!state.thuAdd" v-on:click="() => {addEmail('thu')}" class="add"> + Add</td>
@@ -162,7 +174,9 @@
           <tr>
             <td> Friday </td>
             <td> 
-              <span v-for="item in state.Fri" :key="item"> {{item }} <br/></span>
+              <span v-for="(item, index) in state.Fri" :key="index"> {{item }} 
+                <span @click="() => deleteEmail('fri', index)"> X</span>
+                <br/></span>
               
             </td>
             <td v-if="!state.friAdd" v-on:click="() => {addEmail('fri')}" class="add"> + Add</td>
@@ -174,12 +188,15 @@
     
       </v-table>
     </v-card>
+    <br>
+    <v-btn color="error" v-on:click="deleteAccount" class="btn-right">Delete Account</v-btn>
     
     
   </form>
 </template>
 <script setup>
   import { reactive, onMounted } from "vue";
+  import { useRouter } from 'vue-router'; 
   import { useVuelidate } from "@vuelidate/core";
   import { email, required } from "@vuelidate/validators";
   import { getAuth} from "firebase/auth";
@@ -187,7 +204,8 @@
   import firebaseApp from '../firebase.js';
   import { getFirestore } from 'firebase/firestore';
   import { getDoc, doc, updateDoc, setDoc} from 'firebase/firestore';
-  const db = getFirestore(firebaseApp)
+  const db = getFirestore(firebaseApp);
+  const router = useRouter(); 
 
 
   // call to db goes here, then populate fields with existing values
@@ -349,6 +367,43 @@
 
   }
 
+  async function deleteEmail(day, index) {
+    const mcDoc = doc(db, "medicalcertificates", state.user.uid);
+    const mcSnapshot = await getDoc(mcDoc)
+    if (day === "mon") {
+        state.Mon.splice(index, 1);
+        await updateDoc(mcDoc, {
+          Mon: state.Mon
+        })
+        console.log("success")
+        
+    } else if (day === "tue") {
+        state.Tue.splice(index, 1);
+        await updateDoc(mcDoc, {
+          Tue: state.Tue
+        })
+        console.log("success")
+    } else if (day === "wed") {
+        state.Wed.splice(index, 1);
+        await updateDoc(mcDoc, {
+          Wed: state.Wed
+        })
+        console.log("success")
+    } else if (day === "thu") {
+        state.Thu.splice(index, 1);
+        await updateDoc(mcDoc, {
+          Thu: state.Thu
+        })
+        console.log("success")
+    } else if (day === "fri") {
+        state.Fri.splice(index, 1);
+        await updateDoc(mcDoc, {
+          Fri: state.Fri
+        })
+        console.log("success")
+    }
+}
+
   async function doneEdit() {
     if (state.editing) {
       try {
@@ -474,6 +529,30 @@
       state[key] = value;
     }
   }*/
+  async function deleteAccount() {
+  if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+    try {
+      // Mark the user as inactive in the database
+      const userDocRef = doc(db, "users", state.user.uid);
+      await updateDoc(userDocRef, {
+        isActive: false
+      });
+
+      // Log out the user
+      const auth = getAuth();
+      await auth.signOut();
+
+      // Redirect to login page
+      router.push({ name: "Login" });
+      alert("Account deleted successfully.");
+
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      alert("Failed to delete account. Please try again.");
+    }
+  }
+}
+
 </script>
 
 <style>

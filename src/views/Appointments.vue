@@ -5,14 +5,14 @@ import PatientAppointmentTable from "@/components/tables/PatientAppointmentTable
 import DoctorAppointmentTable from "@/components/tables/DoctorAppointmentTable.vue";
 import PatientPastApptTable from "@/components/tables/PatientPastApptTable.vue";
 //import { ref } from "vue";
-import { getUserRole } from "../queries.js"
+import { getUserRole } from "../queries.js";
 
 export default {
   name: "Table",
   components: {
     PatientAppointmentTable,
     DoctorAppointmentTable,
-    PatientPastApptTable
+    PatientPastApptTable,
   },
   /*
   setup() {
@@ -25,7 +25,7 @@ export default {
     return {
       refreshComp: 0,
       user: null,
-      userRole: null
+      userRole: null,
     };
   },
   methods: {
@@ -40,7 +40,7 @@ export default {
       this.user = user;
       const userRole = await getUserRole(user.uid);
       this.userRole = userRole;
-    }
+    },
   },
 
   created() {
@@ -51,23 +51,23 @@ export default {
 </script>
 
 <template>
-  <div v-if="user">
+  <div v-if="user" class="align-self-start">
     <v-container v-if="userRole === 'patient'">
       <h1>Upcoming Appointments</h1>
-      <br>
-      <PatientAppointmentTable :user='user'/>
+      <br />
+      <PatientAppointmentTable :user="user" />
     </v-container>
 
     <v-container v-else-if="userRole === 'doctor'">
       <h1>Today's Active Appointments</h1>
-      <br>
-      <DoctorAppointmentTable :user='user'/>
+      <br />
+      <DoctorAppointmentTable :user="user" />
     </v-container>
 
     <v-container v-if="userRole === 'patient'">
       <h1>Past Appointments</h1>
-      <br>
-      <PatientPastApptTable :user='user'/>
+      <br />
+      <PatientPastApptTable :user="user" />
     </v-container>
   </div>
 </template>
