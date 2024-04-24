@@ -43,10 +43,8 @@ export default {
 }
 
 #table-header {
-  margin-bottom: 16px;
   text-decoration: underline;
   font-weight: bold;
-  font-size: larger;
 }
 
 #background {
