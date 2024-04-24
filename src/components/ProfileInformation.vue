@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <v-container>
     <v-card title="Profile Information"></v-card>
     <br />
     <v-btn
@@ -182,6 +182,11 @@
                 type="text"
                 class="input-outline"
                 v-model="state.emailToAdd"
+                @keypress.native.enter="
+                  () => {
+                    doneAddEmail('mon');
+                  }
+                "
               />
               <span
                 v-on:click="
@@ -221,6 +226,11 @@
                 type="text"
                 class="input-outline"
                 v-model="state.emailToAdd"
+                @keypress.native.enter="
+                  () => {
+                    doneAddEmail('tue');
+                  }
+                "
               />
               <span
                 v-on:click="
@@ -260,6 +270,11 @@
                 type="text"
                 class="input-outline"
                 v-model="state.emailToAdd"
+                @keypress.native.enter="
+                  () => {
+                    doneAddEmail('wed');
+                  }
+                "
               />
               <span
                 v-on:click="
@@ -299,6 +314,11 @@
                 type="text"
                 class="input-outline"
                 v-model="state.emailToAdd"
+                @keypress.native.enter="
+                  () => {
+                    doneAddEmail('thu');
+                  }
+                "
               />
               <span
                 v-on:click="
@@ -339,6 +359,11 @@
                 type="text"
                 class="input-outline"
                 v-model="state.emailToAdd"
+                @keypress.native.enter="
+                  () => {
+                    doneAddEmail('fri');
+                  }
+                "
               />
               <span
                 v-on:click="
@@ -358,7 +383,7 @@
     <v-btn color="error" v-on:click="deleteAccount" class="btn-right"
       >Delete Account</v-btn
     >
-  </form>
+  </v-container>
 </template>
 <script setup>
 import { reactive, onMounted } from "vue";
