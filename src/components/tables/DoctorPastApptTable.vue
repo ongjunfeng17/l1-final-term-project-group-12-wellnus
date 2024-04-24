@@ -21,6 +21,11 @@
       :sort-by="[{ key: 'date', order: 'asc' }]"
       :search="search"
     >
+      <template v-slot:item.actions="{ item }">
+        <v-icon size="small" @click="viewAppt(item.id)" color="black">
+          $document
+        </v-icon>
+      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -29,6 +34,7 @@
 import firebaseApp from "../../firebase.js";
 import { getDocs, getFirestore } from "firebase/firestore";
 import { collection, query, where } from "firebase/firestore";
+import router from "../../router/index.js";
 const db = getFirestore(firebaseApp);
 
 export default {
@@ -38,22 +44,24 @@ export default {
     search: "",
     headers: [
       { title: "S/N", key: "sn", align: "center", width: "10%" },
+      { title: "Patient Email", key: "email", align: "center", width: "20%" },
       {
         title: "Date (YYYY/MM/DD)",
         key: "date",
         align: "center",
-        width: "20%",
+        width: "15%",
       },
-      { title: "Time", key: "time", align: "center", width: "20%" },
+      { title: "Time", key: "time", align: "center", width: "15%" },
       {
         title: "Teleconsult",
         key: "teleconsult",
         align: "center",
-        width: "20%",
+        width: "15%",
       },
+      { title: "MC", key: "mc", align: "center", width: "15%" },
       {
-        title: "MC",
-        key: "mc",
+        title: "View",
+        key: "actions",
         sortable: false,
         align: "center",
         width: "10%",
@@ -77,8 +85,8 @@ export default {
       const uid = this.user.uid;
       const q = query(
         collection(db, "appointments"),
-        where("patientId", "==", uid),
-        where("timestamp", "<", Date.now())
+        where("doctorId", "==", uid),
+        //where("timestamp", "<", Date.now())
       );
       const querySnapshot = await getDocs(q);
 
@@ -86,16 +94,25 @@ export default {
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
         const docData = doc.data();
+        const mcDays = docData["daysMC"];
+        const mc = mcDays == 0 ? "NIL" : mcDays + " days";
         const docObj = {
+          id: doc.id,
           sn: counter,
           date: docData["date"],
+          email: docData["email"],
           time: docData["time"],
           teleconsult: docData["teleconsult"],
-          mc: "NIL",
+          mc: mc,
         };
         this.data.push(docObj);
         counter++;
       });
+    },
+    viewAppt(id) {
+      //alert("You are going to attend to user " + id);
+      console.log(id);
+      router.push({ path: "/view-appt", query: { appointmentId: id } });
     },
   },
 };

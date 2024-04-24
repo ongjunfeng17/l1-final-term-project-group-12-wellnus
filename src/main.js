@@ -12,6 +12,7 @@ import {
   mdiClipboardPulseOutline,
   mdiCheckboxBlankOutline,
   mdiCheckboxMarked,
+  mdiFileDocumentOutline
 } from "@mdi/js";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
@@ -30,6 +31,7 @@ const vuetify = createVuetify({
       checkboxBlank: mdiCheckboxBlankOutline,
       checkboxMarked: mdiCheckboxMarked,
       clipboard: mdiClipboardPulseOutline,
+      document: mdiFileDocumentOutline,
     },
     sets: {
       mdi,

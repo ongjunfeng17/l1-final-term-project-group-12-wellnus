@@ -66,7 +66,7 @@ export default {
       },
       { title: "MC", key: "mc", align: "center", width: "15%" },
       {
-        title: "Actions",
+        title: "Diagnose",
         key: "actions",
         sortable: false,
         align: "center",
@@ -91,7 +91,8 @@ export default {
       const todayString = new Date().toLocaleDateString("sv");
       const q = query(
         collection(db, "appointments"),
-        where("date", "==", todayString)
+        where("date", "==", todayString),
+        where("doctorId", "==", "") // empty doctorId means doctor has not seen patient
       );
       const querySnapshot = await getDocs(q);
 
@@ -116,7 +117,6 @@ export default {
       });
     },
     attendTo(id) {
-      // using appointment id to delete appointment
       //alert("You are going to attend to user " + id);
       console.log(id);
       router.push({ path: "/diagnosis", query: { appointmentId: id } });

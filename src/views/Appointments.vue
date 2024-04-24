@@ -14,6 +14,7 @@ export default {
     PatientAppointmentTable,
     DoctorAppointmentTable,
     PatientPastApptTable,
+    DoctorPastApptTable,
   },
   /*
   setup() {

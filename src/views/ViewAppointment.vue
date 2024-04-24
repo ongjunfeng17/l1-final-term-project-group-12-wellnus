@@ -1,12 +1,12 @@
 <script>
-import AddDiagnosis from "@/components/AddDiagnosis.vue";
+import ReadAppointment from "@/components/ReadAppointment.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getUserRole } from "../queries.js";
 
 export default {
-  name: "DiagnosisForm",
+  name: "ViewAppointment",
   components: {
-    AddDiagnosis,
+    ReadAppointment,
   },
 
   data() {
@@ -42,9 +42,10 @@ export default {
   
   <v-container>
     <div v-if="userRole === 'patient'">
+      <ReadAppointment/>
     </div>
     <div v-else-if="userRole === 'doctor'">
-      <AddDiagnosis :user="user"/>
+      <ReadAppointment/>
     </div>
     <div v-else>
       You don't seem to be logged in! Redirecting you to the login page...

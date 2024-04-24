@@ -1,9 +1,8 @@
 <script>
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
 
 const db = getFirestore(firebaseApp);
 
@@ -16,23 +15,11 @@ export default {
       email: "",
       teleconsult: "",
       needMC: "",
-      giveMC: true,
-      daysMC: 1,
+      daysMC: 0,
+      diagnosis: "",
+      doctorEmail: "",
       diagnosis: "",
     };
-  },
-
-  props: {
-    user: {
-      type: Object,
-    },
-  },
-
-  watch: {
-    // Watch for changes in give MC
-    giveMC() {
-      this.daysMC = 0; // Reset MC to 0 when giveMC is toggled
-    },
   },
 
   mounted() {
@@ -58,63 +45,10 @@ export default {
         this.email = docData["email"];
         this.teleconsult = docData["teleconsult"];
         this.needMC = docData["needMC"];
+        this.doctorEmail = docData["doctorEmail"];
+        this.daysMC = docData["daysMC"] ? docData["daysMC"] : 0;
+        this.diagnosis = docData["diagnosis"];
       }
-    },
-
-    async savetofs() {
-      // Get the user input information from the form
-      const {
-        selectedDate,
-        selectedTime,
-        reasonForVisit,
-        email,
-        teleconsult,
-        needMC,
-        giveMC,
-        daysMC,
-        diagnosis,
-      } = this;
-
-      if (
-        !selectedDate ||
-        !selectedTime ||
-        !teleconsult ||
-        !needMC ||
-        !reasonForVisit ||
-        !email
-      ) {
-        alert("Invalid appointment");
-        return;
-      }
-
-      if (!diagnosis) {
-        alert("You need to fill in a valid diagnosis");
-        return;
-      }
-
-      if (giveMC && daysMC == 0) {
-        alert("days MC cannot be 0 if giving MC");
-        return;
-      }
-
-      // TODO:
-      // Follow up work such as saving the diagnosis to the database
-      // Sending the MC to relevant emails
-      // Dummy alert below to show that it has passed above checks:
-
-      const appointmentId = this.$route.query.appointmentId;
-      const doctorId = this.user.uid;
-      const doctorEmail = this.user.email;
-
-      await setDoc(doc(db, "appointments", appointmentId), {
-        diagnosis: diagnosis,
-        daysMC: daysMC,
-        doctorId: doctorId,
-        doctorEmail: doctorEmail,
-      }, { merge: true });
-      
-      alert("Successfully attended to patient!");
-      router.push({ path: "/appointments"});
     },
   },
 };
@@ -124,7 +58,7 @@ export default {
   <v-container>
     <v-row align="center" justify="center">
       <v-col cols="12" sm="10">
-        <v-card class="elevation-6 mt-1" @keypress.native.enter="savetofs">
+        <v-card class="elevation-6 mt-1">
           <v-card-title class="pt-5">Medical Diagnosis</v-card-title>
           <v-card-text class="pa-1">
             <v-row align="center" justify="center">
@@ -180,6 +114,17 @@ export default {
                   Doctor's Section
                 </v-card-title>
 
+                <v-text-field
+                  v-model="doctorEmail"
+                  label="Doctor"
+                  required
+                  outlined
+                  dense
+                  class="mt-1"
+                  color="blue"
+                  readonly
+                />
+
                 <v-textarea
                   v-model="diagnosis"
                   label="Diagnosis"
@@ -189,44 +134,23 @@ export default {
                   color="blue"
                   autocomplete="false"
                   class="mt-1"
+                  readonly
                 />
 
-                <v-checkbox
-                  v-model="giveMC"
-                  label="Give MC"
-                  false-icon="$checkboxBlank"
-                  true-icon="$checkboxMarked"
-                ></v-checkbox>
-
-                <v-select
+                <v-text-field
                   v-model="daysMC"
-                  :disabled="!giveMC"
-                  :items="[1, 2, 3, 4, 5]"
                   label="Days of MC"
                   required
                   outlined
                   dense
                   class="mt-1"
                   color="blue"
-                >
-                  <template v-slot:prepend-item>
-                    <v-list-item>
-                      <v-list-item-content>
-                        <v-list-item-title
-                          >Select your option</v-list-item-title
-                        >
-                      </v-list-item-content>
-                    </v-list-item>
-                  </template>
-                </v-select>
+                  readonly
+                />
+                
               </v-col>
             </v-row>
           </v-card-text>
-          <v-row justify="center">
-            <v-col cols="6" sm="4" class="mb-5">
-              <v-btn id="btn" @click="savetofs">Save</v-btn>
-            </v-col>
-          </v-row>
         </v-card>
       </v-col>
     </v-row>

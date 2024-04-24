@@ -5,6 +5,7 @@ import Form from "@/views/Form.vue";
 import Login from "@/views/Login.vue";
 import Profile from "@/views/Profile.vue";
 import DiagnosisForm from "@/views/DiagnosisForm.vue";
+import ViewAppointment from "@/views/ViewAppointment.vue";
 
 const routes = [
   { path: "/appointments", name: "Appointments", component: Appointments },
@@ -23,6 +24,12 @@ const routes = [
     path: "/diagnosis",
     name: "DiagnosisForm",
     component: DiagnosisForm,
+    props: true,
+  },
+  {
+    path: "/view-appt",
+    name: "ViewAppointment",
+    component: ViewAppointment,
     props: true,
   }
 ];
