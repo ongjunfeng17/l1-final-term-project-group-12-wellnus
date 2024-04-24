@@ -44,7 +44,7 @@ export default {
     <div v-if="userRole === 'patient'">
     </div>
     <div v-else-if="userRole === 'doctor'">
-      <AddDiagnosis/>
+      <AddDiagnosis :user="user"/>
     </div>
     <div v-else>
       You don't seem to be logged in! Redirecting you to the login page...

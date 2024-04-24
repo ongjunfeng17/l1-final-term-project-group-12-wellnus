@@ -1,10 +1,9 @@
 <script>
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
-import { collection, addDoc } from "firebase/firestore";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getUserIdByEmail } from "../queries.js";
+
 
 const db = getFirestore(firebaseApp);
 
@@ -24,8 +23,8 @@ export default {
   },
 
   props: {
-    appointmentId: {
-      type: String,
+    user: {
+      type: Object,
     },
   },
 
@@ -102,8 +101,20 @@ export default {
       // Follow up work such as saving the diagnosis to the database
       // Sending the MC to relevant emails
       // Dummy alert below to show that it has passed above checks:
+
       const appointmentId = this.$route.query.appointmentId;
-      alert("Successfully attended to appointment " + appointmentId);
+      const doctorId = this.user.uid;
+      const doctorEmail = this.user.email;
+
+      await setDoc(doc(db, "appointments", appointmentId), {
+        diagnosis: diagnosis,
+        daysMC: daysMC,
+        doctorId: doctorId,
+        doctorEmail: doctorEmail,
+      }, { merge: true });
+      
+      alert("Successfully attended to patient!");
+      router.push({ path: "/appointments"});
     },
   },
 };
