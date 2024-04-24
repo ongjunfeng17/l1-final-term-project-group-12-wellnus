@@ -46,7 +46,6 @@ export default {
   margin-bottom: 16px;
   text-decoration: underline;
   font-weight: bold;
-  font-family: monospace;
   font-size: larger;
 }
 
