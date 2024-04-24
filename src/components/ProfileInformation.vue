@@ -160,7 +160,9 @@
             <td>
               <span v-for="(item, index) in state.Mon" :key="index">
                 {{ item }}
-                <span @click="() => deleteEmail('mon', index)"> X</span>
+                <span @click="() => deleteEmail('mon', index)" class="pl-2">
+                  X</span
+                >
                 <br />
               </span>
             </td>
@@ -187,6 +189,7 @@
                     doneAddEmail('mon');
                   }
                 "
+                class="pl-2"
                 >Done</span
               >
             </td>
@@ -196,7 +199,9 @@
             <td>
               <span v-for="(item, index) in state.Tue" :key="index">
                 {{ item }}
-                <span @click="() => deleteEmail('tue', index)"> X</span>
+                <span @click="() => deleteEmail('tue', index)" class="pl-2">
+                  X</span
+                >
                 <br />
               </span>
             </td>
@@ -223,6 +228,7 @@
                     doneAddEmail('tue');
                   }
                 "
+                class="pl-2"
                 >Done</span
               >
             </td>
@@ -232,7 +238,9 @@
             <td>
               <span v-for="(item, index) in state.Wed" :key="index">
                 {{ item }}
-                <span @click="() => deleteEmail('wed', index)"> X</span>
+                <span @click="() => deleteEmail('wed', index)" class="pl-2">
+                  X</span
+                >
                 <br
               /></span>
             </td>
@@ -259,6 +267,7 @@
                     doneAddEmail('wed');
                   }
                 "
+                class="pl-2"
                 >Done</span
               >
             </td>
@@ -268,7 +277,9 @@
             <td>
               <span v-for="(item, index) in state.Thu" :key="index">
                 {{ item }}
-                <span @click="() => deleteEmail('thu', index)"> X</span>
+                <span @click="() => deleteEmail('thu', index)" class="pl-2">
+                  X</span
+                >
                 <br
               /></span>
             </td>
@@ -295,6 +306,7 @@
                     doneAddEmail('thu');
                   }
                 "
+                class="pl-2"
                 >Done</span
               >
             </td>
@@ -305,7 +317,9 @@
             <td>
               <span v-for="(item, index) in state.Fri" :key="index">
                 {{ item }}
-                <span @click="() => deleteEmail('fri', index)"> X</span>
+                <span @click="() => deleteEmail('fri', index)" class="pl-2">
+                  X</span
+                >
                 <br
               /></span>
             </td>
@@ -332,6 +346,7 @@
                     doneAddEmail('fri');
                   }
                 "
+                class="pl-2"
                 >Done</span
               >
             </td>
