@@ -19,14 +19,14 @@ export default {
       needMC: "",
       giveMC: true,
       daysMC: 1,
-      diagnosis: ""
+      diagnosis: "",
     };
   },
 
   props: {
     appointmentId: {
-      type: String
-    }
+      type: String,
+    },
   },
 
   watch: {
@@ -45,7 +45,7 @@ export default {
     });
     this.initialize();
   },
-  
+
   methods: {
     async initialize() {
       const appointmentId = this.$route.query.appointmentId;
@@ -64,7 +64,7 @@ export default {
 
     async savetofs() {
       // Get the user input information from the form
-      const { 
+      const {
         selectedDate,
         selectedTime,
         reasonForVisit,
@@ -73,8 +73,8 @@ export default {
         needMC,
         giveMC,
         daysMC,
-        diagnosis } =
-        this;
+        diagnosis,
+      } = this;
 
       if (
         !selectedDate ||
@@ -113,12 +113,11 @@ export default {
   <v-container>
     <v-row align="center" justify="center">
       <v-col cols="12" sm="10">
-        <v-card class="elevation-6 mt-1">
+        <v-card class="elevation-6 mt-1" @keypress.native.enter="savetofs">
           <v-card-title class="pt-5">Medical Diagnosis</v-card-title>
           <v-card-text class="pa-1">
             <v-row align="center" justify="center">
               <v-col cols="12" sm="8">
-
                 <v-card-text class="section-title">
                   Appointment Details
                 </v-card-text>
@@ -181,9 +180,9 @@ export default {
                   class="mt-1"
                 />
 
-                <v-checkbox 
-                  v-model="giveMC" 
-                  label="Give MC" 
+                <v-checkbox
+                  v-model="giveMC"
+                  label="Give MC"
                   false-icon="$checkboxBlank"
                   true-icon="$checkboxMarked"
                 ></v-checkbox>
@@ -191,7 +190,7 @@ export default {
                 <v-select
                   v-model="daysMC"
                   :disabled="!giveMC"
-                  :items="[1,2,3,4,5]"
+                  :items="[1, 2, 3, 4, 5]"
                   label="Days of MC"
                   required
                   outlined
@@ -209,7 +208,6 @@ export default {
                     </v-list-item>
                   </template>
                 </v-select>
-
               </v-col>
             </v-row>
           </v-card-text>
