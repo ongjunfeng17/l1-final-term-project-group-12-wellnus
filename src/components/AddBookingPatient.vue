@@ -164,6 +164,9 @@ export default {
           needMC,
           reasonForVisit,
           timestamp: new Date(`${selectedDate}T${selectedTime}`).getTime(),
+          doctorId: "", // to be filled up when doctor attends to patient
+          doctorEmail: "",
+          diagnosis: "",
         });
         console.log("Document written with ID: ", docRef.id);
         alert("Appointment booked successfully!");
