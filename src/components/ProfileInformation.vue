@@ -29,8 +29,9 @@
           <tr>
             <td> Gender </td>
             <td v-if="!state.editing">{{ state.gender }}</td>
-            <td v-else> <input type="text" v-model="state.gender" class="input-outline"> 
-              <v-select v-model="state.gender":items="['Female', 'Male']" class="input-outline"></v-select>
+            <td v-else> 
+              <!-- <input type="text" v-model="state.gender" class="input-outline">  -->
+              <v-select v-model="state.gender" :items="['Female', 'Male']" class="select-outline"></v-select>
             </td>   
           </tr>
 
@@ -570,8 +571,18 @@ td:first-child {
 }
 .input-outline {
   border: 1px solid #ccc; /* Set the border style, color, and width */
-  padding: 4px 8px; /* Add padding for better appearance */
+  padding: 4px; /* Add padding for better appearance */
   border-radius: 4px; /* Optionally, add border radius for rounded corners */
+}
+
+.select-outline {
+  border: 1px solid #ccc; /* Set the border style, color, and width */
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  border-radius: 4px; /* Optionally, add border radius for rounded corners */
+  width: 40%;
+  height: 70%;
 }
 
 .btn-right {
