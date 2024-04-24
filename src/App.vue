@@ -13,13 +13,10 @@ export default {
   <v-app>
     <NavBar />
     <v-container fluid class="pa-0 h-full align-center justify-center">
-
       <div id="background"></div>
       <v-container
         class="h-full d-flex justify-center align-center"
         id="content"
-
-
         ><router-view class="w-full"
       /></v-container>
     </v-container>
@@ -45,6 +42,13 @@ export default {
   background-color: rgb(239, 124, 0);
 }
 
+#table-header {
+  margin-bottom: 16px;
+  text-decoration: underline;
+  font-weight: bold;
+  font-family: monospace;
+  font-size: larger;
+}
 
 #background {
   background: linear-gradient(-45deg, #ef7c00, #e73c7e, #0037dc, #23d5ab);
@@ -67,5 +71,4 @@ export default {
     background-position: 0% 50%;
   }
 }
-
 </style>
