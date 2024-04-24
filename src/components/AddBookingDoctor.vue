@@ -177,6 +177,7 @@ export default {
           doctorId: "", // to be filled up when doctor attends to patient
           doctorEmail: "",
           diagnosis: "",
+          isAttended: false
         });
         console.log("Document written with ID: ", docRef.id);
         alert("Appointment booked successfully!");

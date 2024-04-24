@@ -1,15 +1,16 @@
 <script>
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, collection, addDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
+import { useRouter } from "vue-router";
 
 const db = getFirestore(firebaseApp);
 
 export default {
   data() {
     return {
+      user: null,
       selectedDate: "", // Initialize with today's date
       selectedTime: "",
       reasonForVisit: "", // Store the reason for the visit
@@ -19,6 +20,7 @@ export default {
       giveMC: true,
       daysMC: 1,
       diagnosis: "",
+      patientId: "", // Ensure patientId is part of the data model
     };
   },
 
@@ -29,7 +31,6 @@ export default {
   },
 
   watch: {
-    // Watch for changes in give MC
     giveMC() {
       this.daysMC = 0; // Reset MC to 0 when giveMC is toggled
     },
@@ -58,67 +59,98 @@ export default {
         this.email = docData["email"];
         this.teleconsult = docData["teleconsult"];
         this.needMC = docData["needMC"];
+        this.patientId = docData["patientId"];
       }
     },
 
     async savetofs() {
-      // Get the user input information from the form
-      const {
-        selectedDate,
-        selectedTime,
-        reasonForVisit,
-        email,
-        teleconsult,
-        needMC,
-        giveMC,
-        daysMC,
-        diagnosis,
-      } = this;
-
-      if (
-        !selectedDate ||
-        !selectedTime ||
-        !teleconsult ||
-        !needMC ||
-        !reasonForVisit ||
-        !email
-      ) {
-        alert("Invalid appointment");
+      if (!this.validateInputs()) {
         return;
       }
 
-      if (!diagnosis) {
-        alert("You need to fill in a valid diagnosis");
-        return;
+      await this.updateAppointmentRecord();
+
+      await this.handleEmails();
+
+      alert("Successfully attended to patient!");
+      this.$router.push({ name: "Appointments" });
+    },
+
+    validateInputs() {
+      const { selectedDate, selectedTime, reasonForVisit, email, teleconsult, needMC, diagnosis, daysMC, giveMC } = this;
+      if (!selectedDate || !selectedTime || !teleconsult || !needMC || !reasonForVisit || !email || !diagnosis || (giveMC && daysMC == 0)) {
+        alert("Please ensure all fields are correctly filled and valid.");
+        return false;
       }
+      return true;
+    },
 
-      if (giveMC && daysMC == 0) {
-        alert("days MC cannot be 0 if giving MC");
-        return;
-      }
-
-      // TODO:
-      // Follow up work such as saving the diagnosis to the database
-      // Sending the MC to relevant emails
-      // Dummy alert below to show that it has passed above checks:
-
+    async updateAppointmentRecord() {
+      const { selectedDate, selectedTime, reasonForVisit, email, teleconsult, needMC, giveMC, daysMC, diagnosis, patientId } = this;
       const appointmentId = this.$route.query.appointmentId;
       const doctorId = this.user.uid;
       const doctorEmail = this.user.email;
 
       await setDoc(doc(db, "appointments", appointmentId), {
-        diagnosis: diagnosis,
-        daysMC: daysMC,
-        doctorId: doctorId,
-        doctorEmail: doctorEmail,
+        diagnosis,
+        daysMC,
+        doctorId,
+        doctorEmail,
+        isAttended: true
       }, { merge: true });
-      
-      alert("Successfully attended to patient!");
-      router.push({ path: "/appointments"});
     },
-  },
+
+    async handleEmails() {
+      const { patientId, daysMC, selectedDate } = this;
+      const mcDocRef = doc(db, "medicalcertificates", patientId);
+      const mcDocSnapshot = await getDoc(mcDocRef);
+
+      if (mcDocSnapshot.exists()) {
+        const startDate = new Date(selectedDate);
+        const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+      for (let i = 0; i < daysMC; i++) {
+        const currentDate = new Date(startDate);
+        currentDate.setDate(startDate.getDate() + i);
+        const dayShortForm = daysOfWeek[currentDate.getDay()];
+        if (mcDocSnapshot.data()[dayShortForm]) {
+          mcDocSnapshot.data()[dayShortForm].forEach(email => {
+          this.sendEmail(patientId, email, currentDate);
+        });
+      }
+    }
+  }
+},
+    getEmailsToSend(mcData, daysMC, startDate) {
+      const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      let emailsToSend = [];
+
+      for (let i = 0; i < daysMC; i++) {
+        const currentDate = new Date(startDate);
+        currentDate.setDate(startDate.getDate() + i);
+        const dayShortForm = daysOfWeek[currentDate.getDay()];
+        if (mcData[dayShortForm]) {
+          emailsToSend.push(...mcData[dayShortForm]);
+        }
+      }
+
+      return emailsToSend;
+    },
+
+    async sendEmail(patientId, email, date) {
+      const formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`; // Formats date to YYYY-MM-DD
+      await addDoc(collection(db, "mail"), {
+       to: email,
+        message: {
+          subject: "Medical Certificate Issuance Notification",
+          text: `Attached to this email is the link for the requested Medical Certificate. Please note that the certificate is valid for the date: ${formattedDate}. Link to certificate: https://drive.google.com/file/d/1mpXFZtnRuB4QhYOgtNC2uVq49EoG29ZT/view?usp=sharing`
+          },
+        }).then(() => console.log(`Queued email for delivery on ${formattedDate}!`));
+    }
+  }
 };
 </script>
+
 
 <template>
   <v-container>
