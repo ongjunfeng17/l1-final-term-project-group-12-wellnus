@@ -54,7 +54,7 @@ export default {
 
 <template>
   <v-card v-if="user" class="align-self-start">
-    <v-container v-if="userRole === 'patient'">
+    <v-container v-if="userRole === 'patient'" class="d-flex flex-column ga-16">
       <PatientAppointmentTable :user="user" />
       <PatientPastApptTable :user="user" />
     </v-container>
@@ -63,12 +63,9 @@ export default {
       v-else-if="userRole === 'doctor'"
       class="d-flex flex-column ga-16"
     >
-      <div>
-        <DoctorAppointmentTable :user="user" />
-      </div>
-      <div>
-        <DoctorPastApptTable :user="user" />
-      </div>
+      <DoctorAppointmentTable :user="user" />
+
+      <DoctorPastApptTable :user="user" />
     </v-container>
   </v-card>
 </template>
