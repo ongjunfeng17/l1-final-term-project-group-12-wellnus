@@ -4,6 +4,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import PatientAppointmentTable from "@/components/tables/PatientAppointmentTable.vue";
 import DoctorAppointmentTable from "@/components/tables/DoctorAppointmentTable.vue";
 import PatientPastApptTable from "@/components/tables/PatientPastApptTable.vue";
+import DoctorPastApptTable from "@/components/tables/DoctorPastApptTable.vue";
 //import { ref } from "vue";
 import { getUserRole } from "../queries.js";
 
@@ -53,21 +54,20 @@ export default {
 <template>
   <v-card v-if="user" class="align-self-start">
     <v-container v-if="userRole === 'patient'">
-      <h1>Upcoming Appointments</h1>
-      <br />
       <PatientAppointmentTable :user="user" />
-    </v-container>
-
-    <v-container v-else-if="userRole === 'doctor'">
-      <h1>Today's Active Appointments</h1>
-      <br />
-      <DoctorAppointmentTable :user="user" />
-    </v-container>
-
-    <v-container v-if="userRole === 'patient'">
-      <h1>Past Appointments</h1>
-      <br />
       <PatientPastApptTable :user="user" />
+    </v-container>
+
+    <v-container
+      v-else-if="userRole === 'doctor'"
+      class="d-flex flex-column ga-16"
+    >
+      <div>
+        <DoctorAppointmentTable :user="user" />
+      </div>
+      <div>
+        <DoctorPastApptTable :user="user" />
+      </div>
     </v-container>
   </v-card>
 </template>

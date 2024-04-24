@@ -7,8 +7,12 @@ import "vuetify/dist/vuetify.min.css";
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg";
-import { mdiDelete, mdiGoogle, mdiAccount } from "@mdi/js";
-import { mdiClipboardPulseOutline, mdiCheckboxBlankOutline, mdiCheckboxMarked } from "@mdi/js";
+import { mdiDelete, mdiGoogle, mdiAccount, mdiMagnify } from "@mdi/js";
+import {
+  mdiClipboardPulseOutline,
+  mdiCheckboxBlankOutline,
+  mdiCheckboxMarked,
+} from "@mdi/js";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 
@@ -18,10 +22,11 @@ import "./index.css";
 const vuetify = createVuetify({
   icons: {
     defaultSet: "mdi",
-    aliases: { 
-      delete: mdiDelete, 
-      google: mdiGoogle, 
+    aliases: {
+      delete: mdiDelete,
+      google: mdiGoogle,
       account: mdiAccount,
+      magnify: mdiMagnify,
       checkboxBlank: mdiCheckboxBlankOutline,
       checkboxMarked: mdiCheckboxMarked,
       clipboard: mdiClipboardPulseOutline,
