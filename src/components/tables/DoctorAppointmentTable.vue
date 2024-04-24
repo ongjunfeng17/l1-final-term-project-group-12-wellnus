@@ -66,7 +66,7 @@ export default {
       },
       { title: "MC", key: "mc", align: "center", width: "15%" },
       {
-        title: "Actions",
+        title: "Diagnose",
         key: "actions",
         sortable: false,
         align: "center",
@@ -117,7 +117,6 @@ export default {
       });
     },
     attendTo(id) {
-      // using appointment id to delete appointment
       //alert("You are going to attend to user " + id);
       console.log(id);
       router.push({ path: "/diagnosis", query: { appointmentId: id } });
