@@ -18,19 +18,35 @@ export default {
     dialog: false,
     dialogDelete: false,
     headers: [
-      { title: "S/N", key: "sn",  align: "center", width: "5px" },
-      { title: "Date (YYYY/MM/DD)", key: "date", align: "center", width: "300px" },
-      { title: "Time", key: "time", align: "center", width: "300px" },
-      { title: "Teleconsult", key: "teleconsult", align: "center", width: "300px"},
-      { title: "MC", key: "mc", sortable: false, align: "center", width: "300px" }
+      { title: "S/N", key: "sn", align: "center", width: "10%" },
+      {
+        title: "Date (YYYY/MM/DD)",
+        key: "date",
+        align: "center",
+        width: "20%",
+      },
+      { title: "Time", key: "time", align: "center", width: "20%" },
+      {
+        title: "Teleconsult",
+        key: "teleconsult",
+        align: "center",
+        width: "20%",
+      },
+      {
+        title: "MC",
+        key: "mc",
+        sortable: false,
+        align: "center",
+        width: "10%",
+      },
     ],
     data: [],
   }),
 
   props: {
     user: {
-      type: Object
-    }
+      type: Object,
+    },
   },
 
   created() {
@@ -40,11 +56,13 @@ export default {
   methods: {
     async initialize() {
       const uid = this.user.uid;
-      const q = query(collection(db, "appointments"), 
-          where("patientId", "==", uid),
-          where("timestamp", "<", Date.now()));
+      const q = query(
+        collection(db, "appointments"),
+        where("patientId", "==", uid),
+        where("timestamp", "<", Date.now())
+      );
       const querySnapshot = await getDocs(q);
-      
+
       let counter = 1;
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
@@ -54,8 +72,8 @@ export default {
           date: docData["date"],
           time: docData["time"],
           teleconsult: docData["teleconsult"],
-          mc: "NIL"
-        }
+          mc: "NIL",
+        };
         this.data.push(docObj);
         counter++;
       });

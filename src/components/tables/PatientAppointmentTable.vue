@@ -14,7 +14,14 @@
 
 <script>
 import firebaseApp from "../../firebase.js";
-import { getDocs, getFirestore, deleteDoc, collection, query, where } from "firebase/firestore";
+import {
+  getDocs,
+  getFirestore,
+  deleteDoc,
+  collection,
+  query,
+  where,
+} from "firebase/firestore";
 import { doc } from "firebase/firestore";
 const db = getFirestore(firebaseApp);
 
@@ -23,20 +30,36 @@ export default {
     dialog: false,
     dialogDelete: false,
     headers: [
-      { title: "S/N", key: "sn",  align: "center", width: "5px" },
-      { title: "Date (YYYY/MM/DD)", key: "date", align: "center", width: "200px" },
-      { title: "Time", key: "time", align: "center", width: "150px" },
-      { title: "Teleconsult", key: "teleconsult", align: "center", width: "150px" },
-      { title: "MC", key: "mc", align: "center", width: "150px" },
-      { title: "Actions", key: "actions", sortable: false, align: "center", width: "5px" }
+      { title: "S/N", key: "sn", align: "center", width: "10%" },
+      {
+        title: "Date (YYYY/MM/DD)",
+        key: "date",
+        align: "center",
+        width: "20%",
+      },
+      { title: "Time", key: "time", align: "center", width: "20%" },
+      {
+        title: "Teleconsult",
+        key: "teleconsult",
+        align: "center",
+        width: "20%",
+      },
+      { title: "MC", key: "mc", align: "center", width: "20%" },
+      {
+        title: "Actions",
+        key: "actions",
+        sortable: false,
+        align: "center",
+        width: "10%",
+      },
     ],
     data: [],
   }),
 
   props: {
     user: {
-      type: Object
-    }
+      type: Object,
+    },
   },
 
   created() {
@@ -46,19 +69,20 @@ export default {
   methods: {
     async initialize() {
       const uid = this.user.uid;
-      const q = query(collection(db, "appointments"), 
-          where("patientId", "==", uid),
-          where("timestamp", ">=", Date.now()));
+      const q = query(
+        collection(db, "appointments"),
+        where("patientId", "==", uid),
+        where("timestamp", ">=", Date.now())
+      );
       const querySnapshot = await getDocs(q);
-      
+
       let counter = 1;
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
         const docData = doc.data();
         console.log(doc.id);
         const docObj = {
-          
-          /* Added a new field doc.id (appointment id) 
+          /* Added a new field doc.id (appointment id)
            * because we need to delete specific appointments
            */
           id: doc.id,
@@ -66,19 +90,18 @@ export default {
           date: docData["date"],
           time: docData["time"],
           teleconsult: docData["teleconsult"],
-          mc: docData["needMC"]
-        }
+          mc: docData["needMC"],
+        };
         this.data.push(docObj);
         counter++;
       });
     },
-    async deleteItem(id) { 
-        // using appointment id to delete appointment
-        alert("You are going to cancel an appointment");
-        await deleteDoc(doc(db, "appointments", id));
-        this.data = this.data.filter((dataItem) => dataItem.id !== id);
-        alert("Your appointment has been cancelled successfully");
-      
+    async deleteItem(id) {
+      // using appointment id to delete appointment
+      alert("You are going to cancel an appointment");
+      await deleteDoc(doc(db, "appointments", id));
+      this.data = this.data.filter((dataItem) => dataItem.id !== id);
+      alert("Your appointment has been cancelled successfully");
     },
   },
 };
