@@ -91,7 +91,8 @@ export default {
       const todayString = new Date().toLocaleDateString("sv");
       const q = query(
         collection(db, "appointments"),
-        where("date", "==", todayString)
+        where("date", "==", todayString),
+        where("doctorId", "==", "") // empty doctorId means doctor has not seen patient
       );
       const querySnapshot = await getDocs(q);
 
