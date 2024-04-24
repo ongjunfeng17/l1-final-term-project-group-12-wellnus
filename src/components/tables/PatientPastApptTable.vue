@@ -21,6 +21,11 @@
       :sort-by="[{ key: 'date', order: 'asc' }]"
       :search="search"
     >
+      <template v-slot:item.actions="{ item }">
+        <v-icon size="small" @click="viewAppt(item.id)" color="black">
+          $document
+        </v-icon>
+      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -29,6 +34,7 @@
 import firebaseApp from "../../firebase.js";
 import { getDocs, getFirestore } from "firebase/firestore";
 import { collection, query, where } from "firebase/firestore";
+import router from "../../router/index.js";
 const db = getFirestore(firebaseApp);
 
 export default {
@@ -54,6 +60,13 @@ export default {
       {
         title: "MC",
         key: "mc",
+        sortable: false,
+        align: "center",
+        width: "10%",
+      },
+      {
+        title: "View",
+        key: "actions",
         sortable: false,
         align: "center",
         width: "10%",
@@ -86,16 +99,22 @@ export default {
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
         const docData = doc.data();
+        const mcDays = docData["daysMC"];
+        const mc = mcDays ? mcDays + " days" : "NIL";
         const docObj = {
+          id: doc.id,
           sn: counter,
           date: docData["date"],
           time: docData["time"],
           teleconsult: docData["teleconsult"],
-          mc: "NIL",
+          mc: mc,
         };
         this.data.push(docObj);
         counter++;
       });
+    },
+    async viewAppt(id) {
+      router.push({ path: "/view-appt", query: { appointmentId: id } });
     },
   },
 };

@@ -110,7 +110,6 @@ export default {
       });
     },
     viewAppt(id) {
-      // using appointment id to delete appointment
       //alert("You are going to attend to user " + id);
       console.log(id);
       router.push({ path: "/view-appt", query: { appointmentId: id } });
