@@ -1,15 +1,33 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="data"
-    :sort-by="[{ key: 'date', order: 'asc' }]"
-  >
-    <template v-slot:item.actions="{ item }">
-      <v-icon size="small" @click="deleteItem(item.id)" color="black">
-        $delete
-      </v-icon>
-    </template>
-  </v-data-table>
+  <v-card flat>
+    <v-card-title class="d-flex align-center pe-2">
+      <h1 id="table-header">Upcoming Appointments</h1>
+      <v-spacer></v-spacer>
+      <v-text-field
+        v-model="search"
+        density="compact"
+        label="Search"
+        prepend-inner-icon="$magnify"
+        variant="solo-filled"
+        hide-details
+        single-line
+        flat
+      ></v-text-field>
+    </v-card-title>
+    <v-divider class="border-opacity-100 mb-4"></v-divider>
+    <v-data-table
+      :headers="headers"
+      :items="data"
+      :sort-by="[{ key: 'date', order: 'asc' }]"
+      :search="search"
+    >
+      <template v-slot:item.actions="{ item }">
+        <v-icon size="small" @click="deleteItem(item.id)" color="black">
+          $delete
+        </v-icon>
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script>
@@ -29,6 +47,7 @@ export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
+    search: "",
     headers: [
       { title: "S/N", key: "sn", align: "center", width: "10%" },
       {
