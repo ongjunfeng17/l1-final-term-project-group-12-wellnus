@@ -167,7 +167,7 @@ export default {
           doctorId: "", // to be filled up when doctor attends to patient
           doctorEmail: "",
           diagnosis: "",
-          isAttended: false
+          isAttended: false,
         });
         console.log("Document written with ID: ", docRef.id);
         alert("Appointment booked successfully!");
@@ -185,7 +185,7 @@ export default {
     <v-row align="center" justify="center">
       <v-col cols="12" sm="10">
         <v-card class="elevation-6 mt-1" @keypress.native.enter="savetofs">
-          <v-card-title class="pt-5">Book an Appointment</v-card-title>
+          <v-card-title class="pt-5">Schedule an Appointment</v-card-title>
           <v-card-text class="pa-1">
             <v-row align="center" justify="center">
               <v-col cols="12" sm="8">
@@ -285,7 +285,7 @@ export default {
           </v-card-text>
           <v-row justify="center">
             <v-col cols="6" sm="4" class="mb-5">
-              <v-btn id="btn" @click="savetofs">Save</v-btn>
+              <v-btn id="btn" @click="savetofs">Schedule</v-btn>
             </v-col>
           </v-row>
         </v-card>
