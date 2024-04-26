@@ -21,6 +21,7 @@
       :items="data"
       :sort-by="[{ key: 'date', order: 'asc' }]"
       :search="search"
+      :items-per-page="3"
       :items-per-page-options="[1, 3, 5, 10, 20, -1]"
     >
       <template v-slot:item.actions="{ item }">
