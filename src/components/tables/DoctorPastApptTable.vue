@@ -20,6 +20,7 @@
       :items="data"
       :sort-by="[{ key: 'date', order: 'asc' }]"
       :search="search"
+      :items-per-page-options="[1, 3, 5, 10, 20, -1]"
     >
       <template v-slot:item.actions="{ item }">
         <v-icon size="small" @click="viewAppt(item.id)" color="black">
@@ -85,7 +86,7 @@ export default {
       const uid = this.user.uid;
       const q = query(
         collection(db, "appointments"),
-        where("doctorId", "==", uid),
+        where("doctorId", "==", uid)
         //where("timestamp", "<", Date.now())
       );
       const querySnapshot = await getDocs(q);
