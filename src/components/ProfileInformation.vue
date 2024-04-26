@@ -36,7 +36,10 @@
               <v-select
                 v-model="state.gender"
                 :items="['Female', 'Male']"
-                class="select-outline"
+                label="Select Gender"
+                variant="solo-filled"
+                density="compact"
+                class="mt-6"
               ></v-select>
             </td>
           </tr>
