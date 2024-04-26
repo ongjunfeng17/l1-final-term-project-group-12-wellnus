@@ -105,7 +105,7 @@ export default {
           email: docData["email"],
           time: docData["time"],
           teleconsult: docData["teleconsult"],
-          mc: mc,
+          mc: mc == "undefined days" ? "NIL" : mc,
         };
         this.data.push(docObj);
         counter++;
